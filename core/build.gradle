@@ -1,0 +1,24 @@
+apply plugin: "java"
+
+sourceCompatibility = 1.6
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+sourceSets.main.java.srcDirs = [ "src/" ]
+
+
+eclipse.project {
+    name = appName + "-core"
+}
+
+
+
+
+dependencies {
+  //  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+  //  compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+  //  compile "net.dermetfan.libgdx-utils:libgdx-utils:$gdxUtilsVersion"
+  //  compile name: 'contrib-core-2.1.0'
+ //   compile name: 'contrib-eventbus-2.1.0'
+ //   compile name: 'contrib-plugin-profiler-2.1.0'
+
+}
