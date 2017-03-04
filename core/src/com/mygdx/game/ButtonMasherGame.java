@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Align;
+
 import uk.me.fantastic.retro.game.Player;
 import uk.me.fantastic.retro.game.RetroGame;
 import uk.me.fantastic.retro.screens.GameSession;
@@ -17,22 +19,24 @@ import uk.me.fantastic.retro.screens.GameSession;
 public class ButtonMasherGame extends RetroGame {
     private float time = 15;                            // The length of the game in seconds
     private String message = "";                        // We will print this to screen
-    private boolean[] buttonMashed = new boolean[64];   // Remember if button was held down
+    private boolean[] buttonMashed = new boolean[4];   // Remember if button was held down
     
     private Sprite[] sprites = {                         // An array of 4 sprites
-            new Sprite(new Texture(Gdx.files.internal("round1.png"))),
-            new Sprite(new Texture(Gdx.files.internal("round2.png"))),
-            new Sprite(new Texture(Gdx.files.internal("round3.png"))),
-            new Sprite(new Texture(Gdx.files.internal("round4.png")))
+            new Sprite(new Texture(Gdx.files.internal("baloon.png"))),
+            new Sprite(new Texture(Gdx.files.internal("baloon.png"))),
+            new Sprite(new Texture(Gdx.files.internal("baloon.png"))),
+            new Sprite(new Texture(Gdx.files.internal("baloon.png")))
     };
+
+    private Texture background = new Texture(Gdx.files.internal("sky4.png"));
     
     private BitmapFont font = new BitmapFont(Gdx.files.internal("c64_low2.fnt"));   // for drawing text
     
     public ButtonMasherGame(GameSession session) {                     // Constructor (required)
-        super(session, 640, 380);                         // width and height of screen in pixels
+        super(session, 256, 320);                         // width and height of screen in pixels
                                                                         // (actually too high for a retro look
         for (int i = 0; i < sprites.length; i++) {                      // Set initial positions for the sprites
-            sprites[i].setPosition(100 + i * 150, 200);
+            sprites[i].setPosition(50 + i * 50, 50);
         }
     }
     
@@ -40,7 +44,7 @@ public class ButtonMasherGame extends RetroGame {
     public void doLogic(float deltaTime) {  // Called automatically every frame
         doTimer(deltaTime);                 // deltaTime is time passed since last frame
         if (time > 10) {                    // Game has three phases, current phase depends on how much time is left
-            message = "GET READY (Press A or SPACE to join game)";  // ready phase
+            message = "GET READY\nPress A or SPACE to join game";  // ready phase
         } else if (time > 0) {
             play(deltaTime);                                        // playing phase
         } else {
@@ -72,7 +76,7 @@ public class ButtonMasherGame extends RetroGame {
             } else {
                 buttonMashed[i] = false;
             }
-            if (sprite.getY() < 200) sprite.setY(200);                 // dont fall through floor
+            if (sprite.getY() < 50) sprite.setY(50);                 // dont fall through floor
             player.setScore(Float.valueOf(sprite.getY()).intValue());  // score = height
         }
     }
@@ -91,43 +95,47 @@ public class ButtonMasherGame extends RetroGame {
     
     @Override
     public void doDrawing(Batch batch) {            // called automatically every frame
+
         Gdx.gl.glClearColor(0, 0, 0, 1);     // clear the screen
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
-        drawShapes();
+      //  drawShapes();
         
         batch.begin();
+
+        batch.draw(background, 0, 0);
         drawPlayers(batch);
-        font.draw(batch, message, 200, 300);
+       
+        font.draw(batch, message, 0, 312, 256, Align.center, false);
         batch.end();
     }
     
     // This is very 16 bit looking so you probably shouldn't draw shapes like this....
-    private void drawShapes() {
-        ShapeRenderer shape = getRenderer().getShape();
-        shape.begin(ShapeRenderer.ShapeType.Filled);
-        shape.setColor(0f, 1f, 0f, 1f);
-        shape.rect(0f, 0f, 640f, 200f);
-        shape.end();                                        // draw the ground
+    // private void drawShapes() {
+    //     ShapeRenderer shape = getRenderer().getShape();
+    //     shape.begin(ShapeRenderer.ShapeType.Filled);
+    //     shape.setColor(0f, 1f, 0f, 1f);
+    //     shape.rect(0f, 0f, 640f, 200f);
+    //     shape.end();                                        // draw the ground
         
-        shape.begin(ShapeRenderer.ShapeType.Line);
-        float b = 1;
-        float r = 0;
-        for (float i = 201; i <= 380; i++) {
-            b -= 0.001;
-            r += 0.003;
-            shape.setColor(r, 0, b, 1f);
-            shape.line(0f, i, 640f, i);
-        }
-        shape.end();                                        // draw the sky
-    }
+    //     shape.begin(ShapeRenderer.ShapeType.Line);
+    //     float b = 1;
+    //     float r = 0;
+    //     for (float i = 201; i <= 380; i++) {
+    //         b -= 0.001;
+    //         r += 0.003;
+    //         shape.setColor(r, 0, b, 1f);
+    //         shape.line(0f, i, 640f, i);
+    //     }
+    //     shape.end();                                        // draw the sky
+    // }
     
     private void drawPlayers(Batch batch) {                 // draw one sprite for each Player
         for (int i = 0; i < getPlayers().size(); i++) {
             Sprite sprite = sprites[i];
             Player player = getPlayers().get(i);
             sprite.draw(batch);
-            font.draw(batch, player.getName(), sprite.getX() - 15, 150);
+            font.draw(batch, player.getName(), sprite.getX() - 15, 8);
         }
     }
     
