@@ -6,37 +6,37 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Align;
-
-import uk.me.fantastic.retro.game.Player;
-import uk.me.fantastic.retro.game.RetroGame;
+import org.jetbrains.annotations.NotNull;
+import uk.me.fantastic.retro.games.Player;
+import uk.me.fantastic.retro.games.RetroGame;
 import uk.me.fantastic.retro.screens.GameSession;
 
 /**
  * A simple RetroWar game
  */
+@SuppressWarnings("ClassWithoutNoArgConstructor")
 public class ButtonMasherGame extends RetroGame {
     private float time = 15;                            // The length of the game in seconds
     private String message = "";                        // We will print this to screen
-    private boolean[] buttonMashed = new boolean[4];   // Remember if button was held down
+    private final boolean[] buttonMashed = new boolean[4];   // Remember if button was held down
     
-    private Sprite[] sprites = {                         // An array of 4 sprites
-            new Sprite(new Texture(Gdx.files.internal("baloon.png"))),
-            new Sprite(new Texture(Gdx.files.internal("baloon.png"))),
-            new Sprite(new Texture(Gdx.files.internal("baloon.png"))),
-            new Sprite(new Texture(Gdx.files.internal("baloon.png")))
+    private final Sprite[] sprites = {                         // An array of 4 sprites
+            new Sprite(new Texture(Gdx.files.internal("ButtonMasherGame/baloon.png"))),
+            new Sprite(new Texture(Gdx.files.internal("ButtonMasherGame/baloon.png"))),
+            new Sprite(new Texture(Gdx.files.internal("ButtonMasherGame/baloon.png"))),
+            new Sprite(new Texture(Gdx.files.internal("ButtonMasherGame/baloon.png")))
     };
 
-    private Texture background = new Texture(Gdx.files.internal("sky4.png"));
+    private final Texture background = new Texture(Gdx.files.internal("ButtonMasherGame/sky4.png"));
     
-    private BitmapFont font = new BitmapFont(Gdx.files.internal("c64_low2.fnt"));   // for drawing text
+    private static final BitmapFont font = new BitmapFont(Gdx.files.internal("ButtonMasherGame/c64_low3_black.fnt"));   // for drawing text
     
     public ButtonMasherGame(GameSession session) {                     // Constructor (required)
-        super(session, 256, 320);                         // width and height of screen in pixels
+        super(session, 256, 320, font, font);              // width and height of screen in pixels
                                                                         // (actually too high for a retro look
         for (int i = 0; i < sprites.length; i++) {                      // Set initial positions for the sprites
-            sprites[i].setPosition(50 + i * 50, 50);
+            sprites[i].setPosition(36 + i * 56, 33);
         }
     }
     
@@ -67,7 +67,7 @@ public class ButtonMasherGame extends RetroGame {
             Sprite sprite = sprites[i];
             Player player = getPlayers().get(i);
             sprite.setY(sprite.getY() - deltaTime * 20);            // move sprite downwards
-            if (player.getInput()!=null                             // should never be null!
+            if (player.getInput() != null                             // should never be null!
                         && player.getInput().getA()) {              // if button is pressed
                 if (!buttonMashed[i]) {                             // prevent holding down button to cheat
                     sprite.setY(sprite.getY() + deltaTime * 300);   // move sprite upwards
@@ -76,7 +76,7 @@ public class ButtonMasherGame extends RetroGame {
             } else {
                 buttonMashed[i] = false;
             }
-            if (sprite.getY() < 50) sprite.setY(50);                 // dont fall through floor
+            if (sprite.getY() < 33) sprite.setY(33);                 // dont fall through floor
             player.setScore(Float.valueOf(sprite.getY()).intValue());  // score = height
         }
     }
@@ -94,7 +94,7 @@ public class ButtonMasherGame extends RetroGame {
     }
     
     @Override
-    public void doDrawing(Batch batch) {            // called automatically every frame
+    public void doDrawing(@NotNull Batch batch) {            // called automatically every frame
 
         Gdx.gl.glClearColor(0, 0, 0, 1);     // clear the screen
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -140,12 +140,15 @@ public class ButtonMasherGame extends RetroGame {
     }
     
     // These methods must be implemented but don't have to do anything
+    @SuppressWarnings("EmptyMethod")
     @Override
     public void show() {
     }
+    @SuppressWarnings("EmptyMethod")
     @Override
     public void hide() {
     }
+    @SuppressWarnings("EmptyMethod")
     @Override
     public void dispose() {
     }
