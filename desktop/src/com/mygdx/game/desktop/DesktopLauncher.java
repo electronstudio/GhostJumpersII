@@ -1,7 +1,7 @@
 package com.mygdx.game.desktop;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.game.ButtonMasherGame;
 import com.mygdx.game.MyTitleScreen;
@@ -44,7 +44,7 @@ public class DesktopLauncher {
 		App app = new SingleGameApp(callback, "Button Masher", ButtonMasherGame.class, MyTitleScreen.class, null);
 
 
-		new LwjglApplication(app, callback.getConfig());
+		new Lwjgl3Application(app, callback.getConfig());
 		
 
 	}

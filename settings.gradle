@@ -1,1 +1,6 @@
 include 'desktop', 'core'
+//include ':retrogame'
+//project(':retrogame').projectDir = new File(settingsDir, '../retrogame')
+//includeFlat 'retrogame'
+// 'retrogame:core', 'retrogame:desktop'
+//#project(':Dependency').projectDir = new File(settingsDir, '../Dependency')

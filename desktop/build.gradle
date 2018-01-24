@@ -1,4 +1,4 @@
-apply plugin: "java"
+apply plugin: "kotlin"
 
 sourceCompatibility = 1.8
 sourceSets.main.java.srcDirs = [ "src/" ]
@@ -30,20 +30,113 @@ task dist(type: Jar) {
 
 dist.dependsOn classes
 
-eclipse {
-    project {
-        name = appName + "-desktop"
-        linkedResource name: 'assets', type: '2', location: 'PARENT-1-PROJECT_LOC/core/assets'
-    }
+apply plugin: 'javafx-gradle-plugin'
+
+String osName = org.gradle.internal.os.OperatingSystem.current().getName();
+String osVersion = org.gradle.internal.os.OperatingSystem.current().getVersion();
+String os='unknown'
+println "*** $osName $osVersion was detected."
+
+
+if (org.gradle.internal.os.OperatingSystem.current().isLinux()) {
+    os='linux'
+    //       appName = 'RetroWarLinux'
+} else if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+    os='windows'
+    println "DONT FORGET TO RUN WIN.BAT TO FIX DPI"
+    //       appName = 'RetroWarWindows'
+} else if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
+    os='mac'
+} else {
+    // unknown OS.
 }
 
-task afterEclipseImport(description: "Post processing after project generation", group: "IDE") {
-  doLast {
-    def classpath = new XmlParser().parse(file(".classpath"))
-    new Node(classpath, "classpathentry", [ kind: 'src', path: 'assets' ]);
-    def writer = new FileWriter(file(".classpath"))
-    def printer = new XmlNodePrinter(new PrintWriter(writer))
-    printer.setPreserveWhitespace(true)
-    printer.print(classpath)
-  }
+jfx {
+    // minimal requirement for jfxJar-task
+    mainClass = 'com.mygdx.game.desktop.DesktopLauncher'
+    appName = project.ext.appName
+    verbose = true
+
+    addPackagerJar = true
+    nativeReleaseVersion = "$version"
+    // minimal requirement for jfxNative-task
+    vendor = 'Vendor'
+
+    manifestAttributes = ['Implementation-Version': version]
+
+    //  alternativePathToJarFile = 'build/libs/desktop-0.0.1.jar'
+
+    bundler=os+'.app'
+
+  //  bundler = 'ALL'
+
+    copyAdditionalAppResourcesToJar = true
+    //  additionalBundlerResources = '../android/assets/'
+    additionalAppResources = '../core/assets/'
+
+    bundleArguments = [
+            systemWide: true
+    ]
 }
+
+//apply plugin: "org.mini2Dx.butler"
+//
+//
+//butler {
+//    user = "electron"
+//    game = "retrowar"
+//    userVersion = version
+//    alphaChannel = false
+//
+//    windows {
+//        binDirectory = "desktop/build/jfx/native/RetroWar"
+//    }
+////        osx {
+////            binDirectory = "desktop/build/macapp"
+////        }
+////        anyOs {
+////            binDirectory = "build/anyos"
+////            channel = "java"
+////        }
+//
+//
+//}
+
+//task deleteMacApp(type: Delete) {
+//    delete 'build/macapp'
+//
+//}
+//
+//task copyToMacApp(type: Copy) {
+//    from 'build/jfx/native/RetroWar.app'
+//    into 'build/macapp/RetroWar.app'
+//}
+//
+//
+//task copyToAnyOs(type: Copy) {
+//    from 'build/jfx/app'
+//    into 'build/anyos/app'
+//}
+//
+//task copyToAnyOs2(type: Copy) {
+//    from 'RetroWar'
+//    into 'build/anyos/'
+//}
+//
+//task copyNative(type: Copy) {
+//    if(os.equals('mac')){
+//        from 'build/jfx/native/RetroWar.app'
+//        into 'native/mac/RetroWar.app'
+//    }else{
+//        from 'build/jfx/native/RetroWar'
+//        into 'native/' + os
+//    }
+//}
+//
+//
+//task copyMac(type: Copy) {
+//    from 'build/jfx/native/RetroWar.app'
+//    into 'native/mac/RetroWar.app'
+//}
+//
+//copyNative.dependsOn jfxNative
