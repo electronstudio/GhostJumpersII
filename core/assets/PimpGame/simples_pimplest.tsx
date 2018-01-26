@@ -6,4 +6,9 @@
    <property name="platform" type="bool" value="true"/>
   </properties>
  </tile>
+ <tile id="601">
+  <properties>
+   <property name="ladder" type="bool" value="true"/>
+  </properties>
+ </tile>
 </tileset>
