@@ -8,12 +8,12 @@ import uk.me.fantastic.retro.screens.GameSession
 import java.util.*
 
 
-abstract class FunkyRetroGame(session: GameSession,
-        bgFile: String,
-        w: Float, h: Float, font: BitmapFont, font1: BitmapFont)
+abstract class BasicRetroGame(session: GameSession,
+                              bgFile: String,
+                              w: Float, h: Float, font: BitmapFont, font1: BitmapFont)
     : RetroGame(session, w, h, font, font1) {
 
-    val allSprites = ArrayList<RSprite>()
+    val allSprites = ArrayList<RetroSprite>()
 
     val background = TmxMapLoader().load(bgFile)!!
 
@@ -23,6 +23,7 @@ abstract class FunkyRetroGame(session: GameSession,
         allSprites.forEach {
             it.update(delta)
         }
+        allSprites.removeIf { it.dead }
     }
 
     fun drawSprites(batch: Batch) {

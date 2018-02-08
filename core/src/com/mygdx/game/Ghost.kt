@@ -1,12 +1,12 @@
 package com.mygdx.game
 
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.maps.tiled.TiledMap
-import uk.me.fantastic.retro.games.Player
-import uk.me.fantastic.retro.input.StatefulController
+import com.badlogic.gdx.math.Rectangle
 
-class Ghost(val background: TiledMap) : RSprite(Texture("mods/PimpGame/pimpenemy.png")) {
+class Ghost(val background: TiledMap) : RetroSprite(Texture("mods/PimpGame/pimpenemy.png")) {
+
+    override var collisionShape = Rectangle(0f, 0f, 2f, 2f)
 
     var jumpTimer = 0f
 
@@ -31,11 +31,14 @@ class Ghost(val background: TiledMap) : RSprite(Texture("mods/PimpGame/pimpenemy
             setScale(1f,1f)
             x=0f
             xVel=50f
+            if(y<50){
+                dead=true
+            }
         }
 
-        if(x>320){
+        if(x>320-16f){
             setScale(-1f,1f)
-            x=320f
+            x=320-16f
             xVel=-50f
         }
     }

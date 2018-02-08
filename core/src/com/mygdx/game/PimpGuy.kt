@@ -3,15 +3,12 @@ package com.mygdx.game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Animation
-import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.maps.tiled.TiledMap
-import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.math.Rectangle
 import uk.me.fantastic.retro.games.Player
-import uk.me.fantastic.retro.input.StatefulController
-import java.util.ArrayList
 
 class PimpGuy(val player: Player, val background: TiledMap) :
-        RSprite(Texture("mods/PimpGame/pimpguy1.png")) {
+        RetroSprite(Texture("mods/PimpGame/pimpguy1.png")) {
 
     val runFrames = arrayOf(
             Texture("mods/PimpGame/pimpguy2.png"),
@@ -27,6 +24,8 @@ class PimpGuy(val player: Player, val background: TiledMap) :
 
     var jumpTimer = 0f
     var deathTimer = 0f
+
+    override var collisionShape = Rectangle(0f, 0f, texture.width.toFloat(), 2f)
 
     init {
         x = 30f
@@ -48,8 +47,9 @@ class PimpGuy(val player: Player, val background: TiledMap) :
         if (backgroundCollisions.contains("platform") || backgroundCollisions.contains("ladder")) {
             doRunning()
             yVel=0f
-        } else{
-            yVel=-50f
+        } else if (jumpTimer<0f){
+           // yVel=-1000f*delta //falling
+            yVel-=200f*delta
         }
         if (backgroundCollisions.contains("ladder")) {
             doClimbing()
@@ -69,11 +69,16 @@ class PimpGuy(val player: Player, val background: TiledMap) :
 
 
     private fun doJumping() {
-        if(player.input?.fire == true){
+        if(player.input?.fire == true && backgroundCollisions.contains("platform")){
+            //yVel=100f
             jumpTimer=0.5f
+          //  y=y+26f
         }
-        if(jumpTimer>0f){
-            yVel=50f
+        if(jumpTimer>0.30f){
+            yVel=140f //* Gdx.graphics.deltaTime
+            println("jump frame")
+        }else if(jumpTimer>0f){
+            yVel=0f
         }
     }
 

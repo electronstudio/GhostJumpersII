@@ -7,10 +7,12 @@ import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 import com.badlogic.gdx.math.Rectangle
 
-open class RSprite(texture: Texture, var animation: Animation<Texture>?=null) : Sprite(texture) {
+open class RetroSprite(texture: Texture, var animation: Animation<Texture>?=null) : Sprite(texture) {
     //val bgCollisionPoints = listOf<Vec>(Vec(0f,0f), Vec(16f, 0f))
 
-    val collisionShape = Rectangle(0f, 0f, texture.width.toFloat(), texture.height.toFloat())
+    open val collisionShape = Rectangle(0f, 0f, texture.width.toFloat(), texture.height.toFloat())
+
+    var dead=false
 
     val spriteCollisions = ArrayList<String>()
     val backgroundCollisions = HashSet<String>()
@@ -47,7 +49,7 @@ open class RSprite(texture: Texture, var animation: Animation<Texture>?=null) : 
         y = savedY
     }
 
-    fun collisionTest(others: java.util.ArrayList<RSprite>):Boolean {
+    fun collisionTest(others: java.util.ArrayList<RetroSprite>):Boolean {
         val rect1 = Rectangle(x+ collisionShape.x, y+ collisionShape.y, collisionShape.width, collisionShape.height)
         val rect2 = Rectangle()
         others.forEach {
@@ -62,14 +64,15 @@ open class RSprite(texture: Texture, var animation: Animation<Texture>?=null) : 
         return false
     }
 
+    /** only tests the 4 corners of the collision box */
     fun collisionTest(background: TiledMap) {
-        backgroundCollisions.removeIf { s -> true } // is this faster than making a new one?
+        backgroundCollisions.removeIf { s -> true } // is this clearing faster than making a new HashSet object?
         background.layers.forEach {
             val layer = it as TiledMapTileLayer
-            testPointBackgroundCollision(x,y, layer)
-            testPointBackgroundCollision(x+width,y, layer)
-            testPointBackgroundCollision(x,y+height, layer)
-            testPointBackgroundCollision(x+width,y+height, layer)
+            testPointBackgroundCollision(x+ collisionShape.x, y+ collisionShape.y, layer)
+            testPointBackgroundCollision(x+ collisionShape.x+collisionShape.width, y+ collisionShape.y, layer)
+            testPointBackgroundCollision(x+ collisionShape.x, y+ collisionShape.y+collisionShape.height, layer)
+            testPointBackgroundCollision(x+ collisionShape.x+collisionShape.width, y+ collisionShape.y+collisionShape.height, layer)
         }
     }
 
