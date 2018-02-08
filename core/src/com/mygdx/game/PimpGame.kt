@@ -1,6 +1,7 @@
 package com.mygdx.game
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Batch
@@ -9,6 +10,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.math.MathUtils
+import uk.me.fantastic.retro.App
 import uk.me.fantastic.retro.games.RetroGame
 import uk.me.fantastic.retro.screens.GameSession
 import java.util.*
@@ -17,13 +19,14 @@ import kotlin.collections.ArrayList
 
 
 class PimpGame(session: GameSession) :
-        FunkyRetroGame(session, "PimpGame/level1.tmx",
+        FunkyRetroGame(session, "mods/PimpGame/level1.tmx",
                 320f, 240f, font, font) {
 
 
     val mapRenderer = OrthogonalTiledMapRenderer(background, 1f)
 
     var enemyTimer=0f
+
 
 
 
@@ -39,6 +42,9 @@ class PimpGame(session: GameSession) :
             enemyTimer=MathUtils.random(10f)
         }
         updatePlayers()
+        if(Gdx.input.isKeyPressed(Input.Keys.P)) {
+            println(App.Companion.testSandbox());
+        }
     }
 
 
@@ -86,6 +92,11 @@ class PimpGame(session: GameSession) :
 
     companion object {
         val ghosts = java.util.ArrayList<RSprite>()
-        private val font = BitmapFont(Gdx.files.internal("PimpGame/c64_low3_black.fnt"))   // for drawing text
+
+        private val font = BitmapFont(Gdx.files.internal("mods/PimpGame/c64_low3_black.fnt"))   // for drawing text
+
+
+
+
     }
 }

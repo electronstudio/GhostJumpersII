@@ -11,19 +11,19 @@ import uk.me.fantastic.retro.input.StatefulController
 import java.util.ArrayList
 
 class PimpGuy(val player: Player, val background: TiledMap) :
-        RSprite(Texture("PimpGame/pimpguy1.png")) {
+        RSprite(Texture("mods/PimpGame/pimpguy1.png")) {
 
     val runFrames = arrayOf(
-            Texture("PimpGame/pimpguy2.png"),
-            Texture("PimpGame/pimpguy3.png"))
+            Texture("mods/PimpGame/pimpguy2.png"),
+            Texture("mods/PimpGame/pimpguy3.png"))
     val runningAnim = Animation<Texture>(0.1f, *runFrames)
 
     val climbFrames = arrayOf(
-            Texture("PimpGame/pimpguy4.png"),
-            Texture("PimpGame/pimpguy5.png"))
+            Texture("mods/PimpGame/pimpguy4.png"),
+            Texture("mods/PimpGame/pimpguy5.png"))
     val climbAnim = Animation(0.1f, *climbFrames)
 
-    val dieAnim = Animation(0.1f, Texture("PimpGame/pimpguy6.png"))
+    val dieAnim = Animation(0.1f, Texture("mods/PimpGame/pimpguy6.png"))
 
     var jumpTimer = 0f
     var deathTimer = 0f

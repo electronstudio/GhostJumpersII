@@ -6,7 +6,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap
 import uk.me.fantastic.retro.games.Player
 import uk.me.fantastic.retro.input.StatefulController
 
-class Ghost(val background: TiledMap) : RSprite(Texture("PimpGame/pimpenemy.png")) {
+class Ghost(val background: TiledMap) : RSprite(Texture("mods/PimpGame/pimpenemy.png")) {
 
     var jumpTimer = 0f
 
