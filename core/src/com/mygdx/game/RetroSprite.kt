@@ -3,14 +3,19 @@ package com.mygdx.game
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.Sprite
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 import com.badlogic.gdx.math.Rectangle
 
-open class RetroSprite(texture: Texture, var animation: Animation<Texture>?=null) : Sprite(texture) {
+open class RetroSprite(textureRegion: TextureRegion, var animation: Animation<TextureRegion>?=null) : Sprite
+(textureRegion) {
     //val bgCollisionPoints = listOf<Vec>(Vec(0f,0f), Vec(16f, 0f))
 
-    open val collisionShape = Rectangle(0f, 0f, texture.width.toFloat(), texture.height.toFloat())
+    constructor(tex: Texture) : this(TextureRegion(tex))
+
+    open val collisionShape = Rectangle(0f, 0f, textureRegion.regionWidth.toFloat(), textureRegion.regionHeight
+            .toFloat())
 
     var dead=false
 
@@ -22,14 +27,14 @@ open class RetroSprite(texture: Texture, var animation: Animation<Texture>?=null
 
     var timer=0f
 
-    val defaultAnim = Animation(0.1f, texture)
+    val defaultAnim = Animation(0.1f, textureRegion)
 
     var flip=false
 
     open fun update(delta: Float) {
         timer+=delta
         animation?.let {
-            texture = it.getKeyFrame(timer, true)
+            setRegion(it.getKeyFrame(timer, true))
             setScale(if (flip) -1f else 1f, 1f)
         }
     }

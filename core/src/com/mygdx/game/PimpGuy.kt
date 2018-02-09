@@ -1,31 +1,33 @@
 package com.mygdx.game
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Animation
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Rectangle
 import uk.me.fantastic.retro.games.Player
 
-class PimpGuy(val player: Player, val background: TiledMap) :
-        RetroSprite(Texture("mods/PimpGame/pimpguy1.png")) {
+class PimpGuy(val player: Player, val pimpGame: PimpGame, val spriteSheetOffsetX:Int=26, val spriteSheetOffsetY:Int=5) :
+        RetroSprite(pimpGame.textures[spriteSheetOffsetY][spriteSheetOffsetX]) {
+
+    val background: TiledMap = pimpGame.background
+
+    val textures = pimpGame.textures
+
 
     val runFrames = arrayOf(
-            Texture("mods/PimpGame/pimpguy2.png"),
-            Texture("mods/PimpGame/pimpguy3.png"))
-    val runningAnim = Animation<Texture>(0.1f, *runFrames)
+            textures[spriteSheetOffsetY][spriteSheetOffsetX+1],textures[spriteSheetOffsetY][spriteSheetOffsetX+2])
+    val runningAnim = Animation<TextureRegion>(0.1f, *runFrames)
 
     val climbFrames = arrayOf(
-            Texture("mods/PimpGame/pimpguy4.png"),
-            Texture("mods/PimpGame/pimpguy5.png"))
+            textures[spriteSheetOffsetY][spriteSheetOffsetX+3],textures[spriteSheetOffsetY][spriteSheetOffsetX+4])
     val climbAnim = Animation(0.1f, *climbFrames)
 
-    val dieAnim = Animation(0.1f, Texture("mods/PimpGame/pimpguy6.png"))
+    val dieAnim = Animation(0.1f, textures[spriteSheetOffsetY][spriteSheetOffsetX+5])
 
     var jumpTimer = 0f
     var deathTimer = 0f
 
-    override var collisionShape = Rectangle(0f, 0f, texture.width.toFloat(), 2f)
+    override var collisionShape = Rectangle(4f, 0f, 8f, 2f)
 
     init {
         x = 30f
@@ -57,7 +59,7 @@ class PimpGuy(val player: Player, val background: TiledMap) :
         doJumping()
         jumpTimer-=delta
 
-        if(collisionTest(PimpGame.ghosts)){
+        if(collisionTest(pimpGame.ghosts)){
             deathTimer=3f
         }
 

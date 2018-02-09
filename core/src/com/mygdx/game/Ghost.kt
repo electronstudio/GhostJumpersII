@@ -4,16 +4,17 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Rectangle
 
-class Ghost(val background: TiledMap) : RetroSprite(Texture("mods/PimpGame/pimpenemy.png")) {
+class Ghost(val background: TiledMap, val initX:Float=30f, val initY:Float=230f, val speed:Float=50f) : RetroSprite(Texture
+("mods/PimpGame/pimpenemy.png")) {
 
     override var collisionShape = Rectangle(0f, 0f, 2f, 2f)
 
-    var jumpTimer = 0f
+
 
     init {
-        x = 30f
-        y = 230f
-        xVel=50f
+        x = initX
+        y = initY
+        xVel=speed
     }
 
     override fun update(delta: Float) {
@@ -30,7 +31,7 @@ class Ghost(val background: TiledMap) : RetroSprite(Texture("mods/PimpGame/pimpe
         if(x<0){
             setScale(1f,1f)
             x=0f
-            xVel=50f
+            xVel=xVel*-1
             if(y<50){
                 dead=true
             }
@@ -39,7 +40,7 @@ class Ghost(val background: TiledMap) : RetroSprite(Texture("mods/PimpGame/pimpe
         if(x>320-16f){
             setScale(-1f,1f)
             x=320-16f
-            xVel=-50f
+            xVel=xVel*-1
         }
     }
 
