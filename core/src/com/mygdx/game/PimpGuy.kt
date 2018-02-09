@@ -1,5 +1,6 @@
 package com.mygdx.game
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.tiled.TiledMap
@@ -25,9 +26,11 @@ class PimpGuy(val player: Player, val pimpGame: PimpGame, val spriteSheetOffsetX
     val dieAnim = Animation(0.1f, textures[spriteSheetOffsetY][spriteSheetOffsetX+5])
 
     var jumpTimer = 0f
-    var deathTimer = 0f
+    var stunTimer = 0f
 
-    override var collisionShape = Rectangle(4f, 0f, 8f, 2f)
+    override var spriteCollisionShape = Rectangle(4f, 4f, 8f, 8f)
+
+    var collisionShapeFeet = Rectangle(4f, -2f, 8f, 4f)
 
     init {
         x = 30f
@@ -35,58 +38,91 @@ class PimpGuy(val player: Player, val pimpGame: PimpGame, val spriteSheetOffsetX
 
     }
 
+    fun stunned() = stunTimer >0f
+
     override fun update(delta: Float) {
         super.update(delta)
         animation=defaultAnim
 
-        if(deathTimer>0f){
-            deathTimer-=delta
-            animation=dieAnim
-            return
-        }
-
-        collisionTest(background)
-        if (backgroundCollisions.contains("platform") || backgroundCollisions.contains("ladder")) {
-            doRunning()
-            yVel=0f
-        } else if (jumpTimer<0f){
-           // yVel=-1000f*delta //falling
-            yVel-=200f*delta
-        }
-        if (backgroundCollisions.contains("ladder")) {
-            doClimbing()
-        }
-        doJumping()
-        jumpTimer-=delta
-
-        if(collisionTest(pimpGame.ghosts)){
-            deathTimer=3f
+        if(stunned()){
+            doWeAreStunned(delta)
+        }else{
+            doWeAreNotStunned()
         }
 
         flip = (xVel<0f)
         x+=xVel*delta
         y+=yVel*delta
+        checkOutOfBounds()
+    }
+
+    private fun checkOutOfBounds() {
+        if(x<0f) x=0f
+        if(x>320f-8f) x=320f-8f
+        if(y<0f) y=0f
+    }
+
+    private fun doWeAreStunned(delta: Float) {
+        stunTimer -= delta
+        animation = dieAnim
+        xVel = 0f
+        gravityHappens()
+    }
+
+    private fun weAreOn(s:String) = backgroundCollisions.contains(s)
+    private fun weAreJumping() = jumpTimer>0f
+
+    private fun doWeAreNotStunned() {
+        collisionTest(collisionShapeFeet, background)
+
+        if (weAreOn("ladder")) {
+            doRunning()
+            doClimbingUp()
+            doClimbingDown()
+        } else if (weAreOn("platform")) {
+            doRunning()
+            doClimbingUp()
+            doJumping()
+        }else {
+            gravityHappens()
+        }
+
+
+        jumpTimer-=Gdx.graphics.deltaTime
+
+        checkGhostColisions()
+
+    }
+
+    private fun checkGhostColisions() {
+        if(collisionTest(pimpGame.ghosts)){
+            stunTimer =1f
+        }
+    }
+
+    private fun gravityHappens() {
+        yVel-=200f*Gdx.graphics.deltaTime
     }
 
 
-
     private fun doJumping() {
-        if(player.input?.fire == true && backgroundCollisions.contains("platform")){
-            //yVel=100f
-            jumpTimer=0.5f
-          //  y=y+26f
-        }
+
         if(jumpTimer>0.30f){
             yVel=140f //* Gdx.graphics.deltaTime
-            println("jump frame")
+      //      println("jump frame")
         }else if(jumpTimer>0f){
             yVel=0f
+        }else   if(player.input?.fire == true && backgroundCollisions.contains("platform")){
+            //yVel=100f
+            jumpTimer=0.4f
+            //  y=y+26f
         }
     }
 
 
     private fun doRunning() {
         xVel=0f
+        yVel=0f
         player.input?.leftStick?.let {
             if (it.x < -0.3f) {
                 xVel= -50f
@@ -113,20 +149,22 @@ class PimpGuy(val player: Player, val pimpGame: PimpGame, val spriteSheetOffsetX
         }
     }
 
-    private fun doClimbing() {
+    private fun doClimbingUp() {
 
         player.input?.leftStick?.let {
             if (it.y < -0.3f) {
-                yVel= 50f
-                animation=climbAnim
+                yVel = 100f
+                animation = climbAnim
             }
         }
         player.input?.rightStick?.let {
             if (it.y < -0.3f) {
-                yVel= 50f
-                animation=climbAnim
+                yVel = 100f
+                animation = climbAnim
             }
         }
+    }
+    private fun doClimbingDown(){
         player.input?.leftStick?.let {
             if (it.y > 0.3f) {
                 yVel= -50f

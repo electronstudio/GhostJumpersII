@@ -14,12 +14,12 @@ open class RetroSprite(textureRegion: TextureRegion, var animation: Animation<Te
 
     constructor(tex: Texture) : this(TextureRegion(tex))
 
-    open val collisionShape = Rectangle(0f, 0f, textureRegion.regionWidth.toFloat(), textureRegion.regionHeight
+    open val spriteCollisionShape = Rectangle(0f, 0f, textureRegion.regionWidth.toFloat(), textureRegion.regionHeight
             .toFloat())
 
     var dead=false
 
-    val spriteCollisions = ArrayList<String>()
+  //  val spriteCollisions = ArrayList<String>()
     val backgroundCollisions = HashSet<String>()
 
     var xVel=0f
@@ -55,11 +55,11 @@ open class RetroSprite(textureRegion: TextureRegion, var animation: Animation<Te
     }
 
     fun collisionTest(others: java.util.ArrayList<RetroSprite>):Boolean {
-        val rect1 = Rectangle(x+ collisionShape.x, y+ collisionShape.y, collisionShape.width, collisionShape.height)
+        val rect1 = Rectangle(x+ spriteCollisionShape.x, y+ spriteCollisionShape.y, spriteCollisionShape.width, spriteCollisionShape.height)
         val rect2 = Rectangle()
         others.forEach {
-            rect2.x=it.x+it.collisionShape.x
-            rect2.y=it.y+it.collisionShape.y
+            rect2.x=it.x+it.spriteCollisionShape.x
+            rect2.y=it.y+it.spriteCollisionShape.y
             rect2.width=it.width
             rect2.height=it.height
             if(rect1.overlaps(rect2)){
@@ -70,7 +70,7 @@ open class RetroSprite(textureRegion: TextureRegion, var animation: Animation<Te
     }
 
     /** only tests the 4 corners of the collision box */
-    fun collisionTest(background: TiledMap) {
+    fun collisionTest(collisionShape: Rectangle, background: TiledMap) {
         backgroundCollisions.removeIf { s -> true } // is this clearing faster than making a new HashSet object?
         background.layers.forEach {
             val layer = it as TiledMapTileLayer

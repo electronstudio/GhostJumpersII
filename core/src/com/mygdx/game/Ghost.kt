@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Rectangle
 class Ghost(val background: TiledMap, val initX:Float=30f, val initY:Float=230f, val speed:Float=50f) : RetroSprite(Texture
 ("mods/PimpGame/pimpenemy.png")) {
 
-    override var collisionShape = Rectangle(0f, 0f, 2f, 2f)
+    override var spriteCollisionShape = Rectangle(0f, 0f, 2f, 2f)
 
 
 
@@ -18,7 +18,7 @@ class Ghost(val background: TiledMap, val initX:Float=30f, val initY:Float=230f,
     }
 
     override fun update(delta: Float) {
-        collisionTest(background)
+        collisionTest(spriteCollisionShape, background)
         if (backgroundCollisions.contains("platform")) {
             yVel=0f
         } else{

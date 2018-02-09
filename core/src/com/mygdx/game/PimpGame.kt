@@ -27,7 +27,7 @@ class PimpGame(session: GameSession) :
     val textures = spriteSheet.split(16, 16)
     val ghosts = java.util.ArrayList<RetroSprite>()
 
-    val spawners = listOf<GhostFactory>(GhostFactory(x = 0f, y = 230f, speed = 100f, mintime = 10f, maxTime = 11f,
+    val spawners = listOf<GhostFactory>(GhostFactory(x = 0f, y = 230f, speed = 50f, mintime = 2f, maxTime = 5f,
             pimpGame=this))
 
     override fun doLogic(delta: Float) {
