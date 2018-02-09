@@ -21,7 +21,7 @@ abstract class BasicRetroGame(session: GameSession,
     override fun doLogic(delta: Float) {  // Called automatically every frame
 
         allSprites.forEach {
-            it.update(delta)
+            it.update()
         }
         allSprites.removeIf { it.dead }
     }

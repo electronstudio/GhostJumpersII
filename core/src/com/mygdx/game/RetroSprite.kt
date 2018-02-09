@@ -1,5 +1,6 @@
 package com.mygdx.game
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.Sprite
@@ -31,8 +32,8 @@ open class RetroSprite(textureRegion: TextureRegion, var animation: Animation<Te
 
     var flip=false
 
-    open fun update(delta: Float) {
-        timer+=delta
+    open fun update() {
+        timer+=Gdx.graphics.deltaTime
         animation?.let {
             setRegion(it.getKeyFrame(timer, true))
             setScale(if (flip) -1f else 1f, 1f)
