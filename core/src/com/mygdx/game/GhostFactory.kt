@@ -3,11 +3,11 @@ package com.mygdx.game
 import com.badlogic.gdx.math.MathUtils
 
 class GhostFactory(val x: Float, val y: Float, val speed: Float, val mintime: Float,
-                   val maxTime: Float, val pimpGame: PimpGame) {
+                   val maxTime: Float, val pimpGame: PimpGame, val spriteSheetOffsetX: Int, val spriteSheetOffsetY: Int) {
 
     var enemyTimer=0f
 
-    fun spawn(): Ghost = Ghost(pimpGame.background, x, y, speed)
+    fun spawn(): Ghost = Ghost(pimpGame.background, x, y, speed, pimpGame, spriteSheetOffsetX, spriteSheetOffsetY)
 
     fun update(delta: Float) {
         enemyTimer-=delta

@@ -34,7 +34,7 @@ public class DesktopLauncher {
 
 	//	games.add(factory);
 		//FIXME remove name and t, they are unneccessary
-		App app = new SingleGameApp(callback, "Button Masher", new PimpGameFactory(), MyTitleScreen.class, null);
+		App app = new SingleGameApp(callback, "Ghost Jumpers", new PimpGameFactory(), MyTitleScreen.class, null);
 
 
 		new LwjglApplication(app, callback.getConfig());

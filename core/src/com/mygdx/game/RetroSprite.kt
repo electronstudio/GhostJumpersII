@@ -70,15 +70,29 @@ open class RetroSprite(textureRegion: TextureRegion, var animation: Animation<Te
         return false
     }
 
+    fun collisionTestRect(others: List<Rectangle>):Boolean {
+        val rect1 = Rectangle(x+ spriteCollisionShape.x, y+ spriteCollisionShape.y, spriteCollisionShape.width, spriteCollisionShape.height)
+        others.forEach {
+            if(rect1.overlaps(it)){
+                return true
+            }
+        }
+        return false
+    }
+
     /** only tests the 4 corners of the collision box */
     fun collisionTest(collisionShape: Rectangle, background: TiledMap) {
         backgroundCollisions.removeIf { s -> true } // is this clearing faster than making a new HashSet object?
         background.layers.forEach {
-            val layer = it as TiledMapTileLayer
-            testPointBackgroundCollision(x+ collisionShape.x, y+ collisionShape.y, layer)
-            testPointBackgroundCollision(x+ collisionShape.x+collisionShape.width, y+ collisionShape.y, layer)
-            testPointBackgroundCollision(x+ collisionShape.x, y+ collisionShape.y+collisionShape.height, layer)
-            testPointBackgroundCollision(x+ collisionShape.x+collisionShape.width, y+ collisionShape.y+collisionShape.height, layer)
+            if(it is TiledMapTileLayer) {
+//                val layer = it as TiledMapTileLayer
+                testPointBackgroundCollision(x + collisionShape.x, y + collisionShape.y, it)
+                testPointBackgroundCollision(x + collisionShape.x + collisionShape.width, y + collisionShape.y, it)
+                testPointBackgroundCollision(x + collisionShape.x, y + collisionShape.y + collisionShape.height, it)
+                testPointBackgroundCollision(x + collisionShape.x + collisionShape.width, y + collisionShape.y + collisionShape.height, it)
+            }else { // it is an object map layer
+
+            }
         }
     }
 

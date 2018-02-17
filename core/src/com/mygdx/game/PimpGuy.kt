@@ -89,6 +89,7 @@ class PimpGuy(val player: Player, val pimpGame: PimpGame, val spriteSheetOffsetX
 
 
         checkGhostColisions()
+        checkExitColisions()
 
     }
 
@@ -97,6 +98,13 @@ class PimpGuy(val player: Player, val pimpGame: PimpGame, val spriteSheetOffsetX
             stunTimer =1f
         }
     }
+
+    private fun checkExitColisions() {
+        if(collisionTestRect(pimpGame.exits)){
+            pimpGame.levelComplete(this)
+        }
+    }
+
 
     private fun gravityHappens() {
         yVel-=GRAVITY*Gdx.graphics.deltaTime
