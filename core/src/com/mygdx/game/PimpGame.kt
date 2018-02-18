@@ -135,8 +135,8 @@ class PimpGame(session: GameSession) :
 
 fun pickLevel(session: GameSession): String {
     return when (session.level) {
-       // 0 -> "mods/PimpGame/level1.tmx"
-        else -> "mods/PimpGame/level2.tmx"
+      //  0 -> "mods/PimpGame/level1.tmx"
+        else -> "mods/PimpGame/level3.tmx"
     }
 }
 
