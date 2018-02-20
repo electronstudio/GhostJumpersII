@@ -1,12 +1,13 @@
 package com.mygdx.game
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Gdx.input
+import com.badlogic.gdx.audio.Sound
+import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Rectangle
-import sun.audio.AudioPlayer.player
+import uk.me.fantastic.retro.Prefs
 import uk.me.fantastic.retro.games.Player
 import uk.me.fantastic.retro.input.InputDevice
 
@@ -29,7 +30,9 @@ class PimpGuy(val player: Player, val pimpGame: PimpGame, val spriteSheetOffsetX
     val dieAnim = Animation(0.1f, textures[spriteSheetOffsetY][spriteSheetOffsetX+5])
     val jumpAnimation =  Animation<TextureRegion>(0.1f, *jumpFrames)
 
-
+    val jumpSound = Gdx.audio.newSound(FileHandle("mods/PimpGame/jump_jade.wav"))
+    val stunSound = Gdx.audio.newSound(FileHandle("mods/PimpGame/fall_jade.wav"))
+    val bonusSound = Gdx.audio.newSound(FileHandle("mods/PimpGame/bonus_jade.wav"))
 
     var stunCounter=0f
 
@@ -118,11 +121,13 @@ class PimpGuy(val player: Player, val pimpGame: PimpGame, val spriteSheetOffsetX
     private fun checkGhostColisions() {
         if(collisionTest(pimpGame.ghosts)){
             stunCounter =64f
+            playSound(stunSound)
         }
     }
 
     private fun checkExitColisions() {
         if(collisionTestRect(pimpGame.exits)){
+            playSound(bonusSound)
             pimpGame.levelComplete(this)
         }
     }
@@ -145,8 +150,15 @@ class PimpGuy(val player: Player, val pimpGame: PimpGame, val spriteSheetOffsetX
     private fun doJumping() {
         if (input.fire) {
             yVel = 100f
-            animation = climbAnim
+            animation = jumpAnimation
+            playSound(jumpSound)
+
         }
+    }
+
+    private fun playSound(sound: Sound) {
+        sound.stop()
+        sound.play(Prefs.NumPref.FX_VOLUME.asVolume(), (player.id.toFloat() * 0.3f + 0.5f), 0f)
     }
 
     private fun doClimbingUp() {

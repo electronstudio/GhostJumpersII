@@ -1,7 +1,10 @@
 package com.mygdx.game
 
+import com.badlogic.gdx.Audio
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.audio.Sound
+import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Batch
@@ -21,6 +24,7 @@ class PimpGame(session: GameSession, val difficulty:Int, var timeLimit:Float, va
     val mapRenderer = OrthogonalTiledMapRenderer(background, 1f)
 
     val spriteSheet = TextureRegion(Texture("mods/PimpGame/simples_pimplest.png"))
+
     val textures = spriteSheet.split(16, 16)
     val ghosts = ArrayList<RetroSprite>()
     val exits = ArrayList<Rectangle>()
@@ -141,7 +145,7 @@ class PimpGame(session: GameSession, val difficulty:Int, var timeLimit:Float, va
     companion object {
         private val font = BitmapFont(Gdx.files.internal("mods/PimpGame/c64_low3_black.fnt"))   // for drawing text
         val maps = listOf<String>(
-               "mods/PimpGame/level3.tmx",
+               "mods/PimpGame/level1.tmx",
                 "mods/PimpGame/level2.tmx"
                // "mods/PimpGame/level3.tmx"
         )

@@ -13,9 +13,9 @@ source at some point, and then this repo will remain as an example.
 Graphics are based on Simples Pimples art set.
 
 TODO:
-* soundfx
+* <strike>soundfx</strike>
 * option for smooth motion
-* make level 2 blue
+* <strike>make level 2 blue</strike>
 * BETA
 * enemies that can climb down
 * level 3
