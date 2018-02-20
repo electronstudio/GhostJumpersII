@@ -141,7 +141,7 @@ class PimpGame(session: GameSession, val difficulty:Int, var timeLimit:Float, va
     companion object {
         private val font = BitmapFont(Gdx.files.internal("mods/PimpGame/c64_low3_black.fnt"))   // for drawing text
         val maps = listOf<String>(
-               "mods/PimpGame/level1.tmx",
+               "mods/PimpGame/level3.tmx",
                 "mods/PimpGame/level2.tmx"
                // "mods/PimpGame/level3.tmx"
         )

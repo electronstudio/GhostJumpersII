@@ -16,6 +16,10 @@ TODO:
 * soundfx
 * option for smooth motion
 * make level 2 blue
+* BETA
 * enemies that can climb down
 * level 3
-* cody tidy
+* code tidy
+* winner
+* scores
+* scrolling
