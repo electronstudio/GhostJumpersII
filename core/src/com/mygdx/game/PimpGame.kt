@@ -14,8 +14,8 @@ import uk.me.fantastic.retro.App
 import uk.me.fantastic.retro.screens.GameSession
 
 
-class PimpGame(session: GameSession) :
-        BasicRetroGame(session, pickLevel(session),
+class PimpGame(session: GameSession, val difficulty:Int, var timeLimit:Float, val level:Int) :
+        BasicRetroGame(session, maps[level],
                 320f, 240f, font, font) {
 
     val mapRenderer = OrthogonalTiledMapRenderer(background, 1f)
@@ -52,9 +52,9 @@ class PimpGame(session: GameSession) :
                                     GhostFactory(
                                             x = obj.rectangle.x,
                                             y = obj.rectangle.y,
-                                            speed = obj.properties["speed"] as Float,
-                                            mintime = obj.properties["minTime"] as Float,
-                                            maxTime = obj.properties["maxTime"] as Float,
+                                            speed = obj.properties["speed"] as Float * (difficulty.toFloat()/2f),
+                                            mintime = obj.properties["minTime"] as Float / (difficulty.toFloat()/2f),
+                                            maxTime = obj.properties["maxTime"] as Float / (difficulty.toFloat()/2f),
                                             pimpGame = this,
                                             spriteSheetOffsetX=obj.properties["spriteSheetOffsetX"] as Int,
                                             spriteSheetOffsetY=obj.properties["spriteSheetOffsetY"] as Int
@@ -74,6 +74,13 @@ class PimpGame(session: GameSession) :
         spawners.forEach { it.update(delta) }
 
         checkForNewPlayerJoins()
+
+        if(timeleft()<=0){
+            session.nextGame=null
+            gameover()
+        }
+
+
 
         if (Gdx.input.isKeyPressed(Input.Keys.P)) {
             println(App.Companion.testSandbox());
@@ -95,6 +102,15 @@ class PimpGame(session: GameSession) :
         batch.begin()
         drawSprites(batch)
         batch.end()
+
+        batch.begin()
+        font.draw(batch,"${timeleft()}",150f,240f)
+        font.draw(batch,"${(difficulty-1)*maps.size + level + 1}",0f,240f)
+        batch.end()
+    }
+
+    private fun timeleft(): Int{
+        return (timeLimit-timer).toInt()
     }
 
 
@@ -124,19 +140,21 @@ class PimpGame(session: GameSession) :
 
     companion object {
         private val font = BitmapFont(Gdx.files.internal("mods/PimpGame/c64_low3_black.fnt"))   // for drawing text
+        val maps = listOf<String>(
+               "mods/PimpGame/level1.tmx",
+                "mods/PimpGame/level2.tmx"
+               // "mods/PimpGame/level3.tmx"
+        )
     }
 
     fun levelComplete(winner: PimpGuy) {
-        session.level++
-        session.nextGame = PimpGame(session)
+        if(level==maps.lastIndex) {
+            session.nextGame = PimpGame(session, difficulty + 1, timeLimit, 0)
+        }else{
+            session.nextGame = PimpGame(session, difficulty, timeLimit, level+1)
+        }
         gameover()
     }
 }
 
-fun pickLevel(session: GameSession): String {
-    return when (session.level) {
-      //  0 -> "mods/PimpGame/level1.tmx"
-        else -> "mods/PimpGame/level3.tmx"
-    }
-}
 

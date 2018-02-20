@@ -63,9 +63,9 @@
   <object id="3" name="entry" type="entry" x="35.1663" y="201.167" width="7" height="6.33333"/>
   <object id="4" name="spawner" type="spawner" x="307.167" y="18.5" width="7" height="6.33333">
    <properties>
-    <property name="maxTime" type="float" value="5"/>
+    <property name="maxTime" type="float" value="10"/>
     <property name="minTime" type="float" value="1"/>
-    <property name="speed" type="float" value="50"/>
+    <property name="speed" type="float" value="30"/>
     <property name="spriteSheetOffsetX" type="int" value="26"/>
     <property name="spriteSheetOffsetY" type="int" value="7"/>
    </properties>

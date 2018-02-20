@@ -16,9 +16,11 @@ abstract class BasicRetroGame(session: GameSession,
     val allSprites = ArrayList<RetroSprite>()
 
     val background = TmxMapLoader().load(bgFile)!!
+    var timer=0f
 
 
     override fun doLogic(delta: Float) {  // Called automatically every frame
+        timer+=delta
 
         allSprites.forEach {
             it.update()
