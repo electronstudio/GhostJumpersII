@@ -14,7 +14,7 @@ Graphics are based on Simples Pimples art set.
 
 TODO:
 * <strike>soundfx</strike>
-* option for smooth motion
+* <strike>option for smooth motion</strike>
 * <strike>make level 2 blue</strike>
 * BETA
 * enemies that can climb down
@@ -23,3 +23,5 @@ TODO:
 * winner
 * scores
 * scrolling
+* either: allow smooth motion and bilinear filtering
+  * OR: disable option in menu when necessary

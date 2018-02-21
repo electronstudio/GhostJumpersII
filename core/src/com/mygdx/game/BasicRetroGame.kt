@@ -9,13 +9,13 @@ import java.util.*
 
 
 abstract class BasicRetroGame(session: GameSession,
-                              bgFile: String,
+
                               w: Float, h: Float, font: BitmapFont, font1: BitmapFont)
     : RetroGame(session, w, h, font, font1) {
 
     val allSprites = ArrayList<RetroSprite>()
 
-    val background = TmxMapLoader().load(bgFile)!!
+
     var timer=0f
 
 
