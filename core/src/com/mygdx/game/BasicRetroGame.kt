@@ -2,11 +2,8 @@ package com.mygdx.game
 
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.BitmapFont
-import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import uk.me.fantastic.retro.games.RetroGame
 import uk.me.fantastic.retro.screens.GameSession
-import java.util.*
-
 
 abstract class BasicRetroGame(session: GameSession,
 
@@ -15,12 +12,10 @@ abstract class BasicRetroGame(session: GameSession,
 
     val allSprites = ArrayList<RetroSprite>()
 
+    var timer = 0f
 
-    var timer=0f
-
-
-    override fun doLogic(delta: Float) {  // Called automatically every frame
-        timer+=delta
+    override fun doLogic(delta: Float) { // Called automatically every frame
+        timer += delta
 
         allSprites.forEach {
             it.update()
@@ -30,7 +25,7 @@ abstract class BasicRetroGame(session: GameSession,
 
     fun drawSprites(batch: Batch) {
 
-        allSprites.forEach{
+        allSprites.forEach {
             it.draw(batch)
         }
     }
