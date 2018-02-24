@@ -11,6 +11,6 @@ class PimpGameFactory : AbstractGameFactory("Pimp Game", null) {
     override val image by lazy { Texture(Gdx.files.internal("badlogic.jpg")) }
 
     override fun create(gameSession: GameSession): Game {
-        return PimpGame(gameSession, 1, 100f, 0)
+        return PimpGame(gameSession, 1, 50f, 0)
     }
 }

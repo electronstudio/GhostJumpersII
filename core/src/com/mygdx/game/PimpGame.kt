@@ -11,11 +11,12 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.math.Rectangle
 import uk.me.fantastic.retro.App
+import uk.me.fantastic.retro.games.RetroGame
 import uk.me.fantastic.retro.screens.GameSession
 import uk.me.fantastic.retro.unigame.Background
 
-class PimpGame(session: GameSession, val difficulty: Int, var timeLimit: Float, val level: Int) :
-        BasicRetroGame(session,
+class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
+        RetroGame(session,
                 320f, 240f, font, font) {
 
     val background = TmxMapLoader().load(maps[level])!!
@@ -34,6 +35,12 @@ class PimpGame(session: GameSession, val difficulty: Int, var timeLimit: Float, 
     val spawners = ArrayList<GhostFactory>()
 
     var noOfPlayersInGameAlready = 0
+
+    val allSprites = ArrayList<RetroSprite>()
+
+    val timeLimit: Float = difficulty.toFloat()
+    var timer = 0f
+
 
     init {
 
@@ -73,7 +80,12 @@ class PimpGame(session: GameSession, val difficulty: Int, var timeLimit: Float, 
     }
 
     override fun doLogic(delta: Float) {
-        super.doLogic(delta)
+        timer += delta
+
+        allSprites.forEach {
+            it.update()
+        }
+        allSprites.removeIf { it.dead }
 
         spawners.forEach { it.update(delta) }
 
@@ -106,6 +118,14 @@ class PimpGame(session: GameSession, val difficulty: Int, var timeLimit: Float, 
         font.draw(batch, "${timeleft()}", 150f, 240f)
         font.draw(batch, "${(difficulty - 1) * maps.size + level + 1}", 0f, 240f)
         batch.end()
+    }
+
+
+    fun drawSprites(batch: Batch) {
+
+        allSprites.forEach {
+            it.draw(batch)
+        }
     }
 
     private fun timeleft(): Int {
@@ -152,5 +172,14 @@ class PimpGame(session: GameSession, val difficulty: Int, var timeLimit: Float, 
             session.nextGame = PimpGame(session, difficulty, timeLimit, level + 1)
         }
         gameover()
+    }
+
+    // These methods must be implemented but don't have to do anything
+    override fun show() {}
+
+    override fun hide() {}
+
+    override fun dispose() {
+        spriteSheet.texture.dispose()
     }
 }

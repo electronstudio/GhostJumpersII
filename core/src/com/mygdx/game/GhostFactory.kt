@@ -15,7 +15,7 @@ class GhostFactory(val x: Float, val y: Float, val speed: Float, val mintime: Fl
 
     fun update(delta: Float) {
         enemyTimer -= delta
-        if (enemyTimer<0f) {
+        if (enemyTimer < 0f) {
             val g = spawn()
             pimpGame.allSprites.add(g)
             pimpGame.ghosts.add(g)
