@@ -10,15 +10,17 @@ be loaded into RetroWar as a plugin.  Still useful for that purpose but it's now
 being expanded a little to make a Donkey Kong clone.  May be merged into main
 source at some point, and then this repo will remain as an example.
 
-Graphics are based on Simples Pimples art set.
+Graphics are based on Simples Pimples art set by Surt https://opengameart.org/content/simple-broad-purpose-tileset
+SoundFX are by JDWasabi https://wasabi-playground.com/about
 
 TODO:
-* <strike>soundfx</strike>
-* <strike>option for smooth motion</strike>
-* <strike>make level 2 blue</strike>
-* BETA
+
+[X] <strike>soundfx</strike>
+[X] <strike>option for smooth motion</strike>
+[X] <strike>make level 2 blue</strike>
+[X] BETA
 * enemies that can climb down
-* level 3
+[X] level 3
 * code tidy
 * winner
 * scores
