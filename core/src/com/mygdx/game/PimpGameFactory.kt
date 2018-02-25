@@ -6,6 +6,9 @@ import uk.me.fantastic.retro.games.AbstractGameFactory
 import uk.me.fantastic.retro.games.Game
 import uk.me.fantastic.retro.screens.GameSession
 
+/*
+ * Used by RetroWar to create our main class
+ */
 class PimpGameFactory : AbstractGameFactory("Pimp Game", null) {
 
     override val image by lazy { Texture(Gdx.files.internal("badlogic.jpg")) }

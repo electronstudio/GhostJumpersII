@@ -8,6 +8,9 @@ import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 import com.badlogic.gdx.math.Rectangle
 
+/*
+ * Some functions all our sprites have in common
+ */
 abstract class RetroSprite(textureRegion: TextureRegion) : Sprite
 (textureRegion) {
     var animation: Animation<TextureRegion>? = null
@@ -16,7 +19,7 @@ abstract class RetroSprite(textureRegion: TextureRegion) : Sprite
         animation = a
     }
 
-    abstract val spriteCollisionShape: Rectangle //= Rectangle(0f, 0f, textureRegion.regionWidth.toFloat(), textureRegion.regionHeight .toFloat())
+    abstract val spriteCollisionShape: Rectangle
 
     var dead = false
 
@@ -27,27 +30,29 @@ abstract class RetroSprite(textureRegion: TextureRegion) : Sprite
 
     var timer = 0f
 
-
-
     var flip = false
 
+    /*
+     * We will call this every frame
+     */
+    abstract fun update()
 
-    open fun update() {
+    /* Some sprites dont animate so need to call this */
+    fun doAnimation() {
         timer += Gdx.graphics.deltaTime
         animation?.let {
             setRegion(it.getKeyFrame(timer, true))
-            setScale(if (flip) -1f else 1f, 1f)
+            if (flip) flipSprite() else unFlipSprite()
         }
     }
 
-
-
-    fun collisionTest(others: java.util.ArrayList<RetroSprite>): Boolean {
-
-        val rect1 = Rectangle(x + spriteCollisionShape.x, y + spriteCollisionShape.y, spriteCollisionShape.width, spriteCollisionShape.height)
+    fun collisionTest(others: ArrayList<RetroSprite>): Boolean {
+        val rect1 = Rectangle(
+                x + spriteCollisionShape.x, y + spriteCollisionShape.y,
+                spriteCollisionShape.width, spriteCollisionShape.height
+        )
         val rect2 = Rectangle()
         others.forEach {
-
             rect2.x = it.x + it.spriteCollisionShape.x
             rect2.y = it.y + it.spriteCollisionShape.y
             rect2.width = it.spriteCollisionShape.width
@@ -60,7 +65,9 @@ abstract class RetroSprite(textureRegion: TextureRegion) : Sprite
     }
 
     fun collisionTestRect(others: List<Rectangle>): Boolean {
-        val rect1 = Rectangle(x + spriteCollisionShape.x, y + spriteCollisionShape.y, spriteCollisionShape.width, spriteCollisionShape.height)
+        val rect1 = Rectangle(
+                x + spriteCollisionShape.x, y + spriteCollisionShape.y,
+                spriteCollisionShape.width, spriteCollisionShape.height)
         others.forEach {
             if (rect1.overlaps(it)) {
                 return true
@@ -69,12 +76,11 @@ abstract class RetroSprite(textureRegion: TextureRegion) : Sprite
         return false
     }
 
-    /** only tests the 4 corners of the collision box */
+    /* only tests the 4 corners of the collision box */
     fun collisionTest(collisionShape: Rectangle, background: TiledMap) {
         backgroundCollisions.removeIf { s -> true } // is this clearing faster than making a new HashSet object?
         background.layers.forEach {
             if (it is TiledMapTileLayer) {
-//                val layer = it as TiledMapTileLayer
                 testPointBackgroundCollision(x + collisionShape.x, y + collisionShape.y, it)
                 testPointBackgroundCollision(x + collisionShape.x + collisionShape.width, y + collisionShape.y, it)
                 testPointBackgroundCollision(x + collisionShape.x, y + collisionShape.y + collisionShape.height, it)
@@ -93,5 +99,16 @@ abstract class RetroSprite(textureRegion: TextureRegion) : Sprite
         }
     }
 
+    fun doSimplePhysics() {
+        x += xVel * Gdx.graphics.deltaTime
+        y += yVel * Gdx.graphics.deltaTime
+    }
 
+    fun flipSprite() {
+        setScale(-1f, 1f)
+    }
+
+    fun unFlipSprite() {
+        setScale(1f, 1f)
+    }
 }

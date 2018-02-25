@@ -6,9 +6,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Rectangle
 
-class Goblin(val background: TiledMap, val initX: Float, val initY: Float, val speed: Float = 50f, leftWalk: Float,
-             rightWalk: Float,
-             val pimpGame: PimpGame, animation: Animation<TextureRegion>
+/*
+ * An enemy sprite that marches left and right in a line, forever
+ */
+class Goblin(
+        val background: TiledMap, val initX: Float, val initY: Float, val speed: Float, leftWalk: Float,
+        rightWalk: Float,
+        val pimpGame: PimpGame, animation: Animation<TextureRegion>
 ) :
         RetroSprite(animation) {
 
@@ -21,19 +25,18 @@ class Goblin(val background: TiledMap, val initX: Float, val initY: Float, val s
         x = initX
         y = initY
         xVel = speed
-
     }
 
     override fun update() {
-        super.update()
+        doAnimation()
 
         if (x < leftLimit) {
-            setScale(1f, 1f)
+            unFlipSprite()
             x = leftLimit
             xVel = xVel * -1
         }
         if (x > rightLimit) {
-            setScale(-1f, 1f)
+            flipSprite()
             x = rightLimit
             xVel = xVel * -1
         }

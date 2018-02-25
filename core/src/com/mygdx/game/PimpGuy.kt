@@ -2,66 +2,55 @@ package com.mygdx.game
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
-import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.g2d.Animation
-import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Rectangle
 import uk.me.fantastic.retro.Prefs
 import uk.me.fantastic.retro.games.Player
-import uk.me.fantastic.retro.input.InputDevice
 
-class PimpGuy(val player: Player, val pimpGame: PimpGame, val spriteSheetOffsetX: Int = 26, val spriteSheetOffsetY: Int = 5) :
+/*
+ * The player character sprite
+ * Controlled by input, affected by gravity etc
+ * */
+class PimpGuy(
+        val player: Player,
+        val pimpGame: PimpGame,
+        spriteSheetOffsetX: Int, spriteSheetOffsetY: Int
+) :
         RetroSprite(pimpGame.textures[spriteSheetOffsetY][spriteSheetOffsetX]) {
 
-    val GRAVITY = 200f
-    val background: TiledMap = pimpGame.background
-    val textures = pimpGame.textures
-    val input: InputDevice
+    private val GRAVITY = 200f
+    private val background: TiledMap = pimpGame.background
+    private val textures = pimpGame.textures
+    private val input = player.input!! // if player has no input device we are fucked so just crash
+    // TODO work out why input is nullable and if it can ever really be null
 
-    val defaultAnim = Animation(0.1f, pimpGame.textures[spriteSheetOffsetY][spriteSheetOffsetX])
-    val jumpFrames = arrayOf(textures[spriteSheetOffsetY][spriteSheetOffsetX + 1])
-    val runFrames = arrayOf(
-            textures[spriteSheetOffsetY][spriteSheetOffsetX + 1], textures[spriteSheetOffsetY][spriteSheetOffsetX + 2])
-    val runningAnim = Animation<TextureRegion>(0.1f, *runFrames)
-    val climbFrames = arrayOf(
-            //textures[spriteSheetOffsetY][spriteSheetOffsetX+2],
-            textures[spriteSheetOffsetY][spriteSheetOffsetX + 3])
-    val climbAnim = Animation(0.1f, *climbFrames)
-    val dieAnim = Animation(0.1f, textures[spriteSheetOffsetY][spriteSheetOffsetX + 5])
-    val jumpAnimation = Animation<TextureRegion>(0.1f, *jumpFrames)
+    private val defaultAnim = Animation(0.1f, pimpGame.textures[spriteSheetOffsetY][spriteSheetOffsetX])
+    private val runningAnim = Animation(0.1f, textures[spriteSheetOffsetY][spriteSheetOffsetX + 1], textures[spriteSheetOffsetY][spriteSheetOffsetX + 2])
+    private val climbAnim = Animation(0.1f, textures[spriteSheetOffsetY][spriteSheetOffsetX + 3])
+    private val dieAnim = Animation(0.1f, textures[spriteSheetOffsetY][spriteSheetOffsetX + 5])
+    private val jumpAnimation = Animation(0.1f, textures[spriteSheetOffsetY][spriteSheetOffsetX + 1])
 
-    val jumpSound = Gdx.audio.newSound(FileHandle("mods/PimpGame/jump_jade.wav"))
-    val stunSound = Gdx.audio.newSound(FileHandle("mods/PimpGame/fall_jade.wav"))
-    val bonusSound = Gdx.audio.newSound(FileHandle("mods/PimpGame/bonus_jade.wav"))
-
-    var stunCounter = 0f
+    private var stunCounter = 0f
+    private var fallTimer = 100f
 
     override val spriteCollisionShape = Rectangle(4f, 4f, 8f, 8f)
     val collisionShapeFeet = Rectangle(4f, -2f, 8f, 4f)
 
-    init {
-        x = 30f
-        y = 30f
-        input = player.input!! // if player has no input device we are fucked so just crash
-        // TODO work out why input is nullable and if it can ever really be null
-    }
+    fun isStunned() = stunCounter > 0f
 
-    fun stunned() = stunCounter > 0f
-
+    /* called every frame */
     override fun update() {
-        super.update()
+        doAnimation()
         animation = defaultAnim
 
-        if (stunned()) {
+        if (isStunned()) {
             doWeAreStunned()
         } else {
             doWeAreNotStunned()
         }
 
-
-        x += xVel * Gdx.graphics.deltaTime
-        y += yVel * Gdx.graphics.deltaTime
+        doSimplePhysics()
         checkOutOfBounds()
         checkPushes()
     }
@@ -81,59 +70,59 @@ class PimpGuy(val player: Player, val pimpGame: PimpGame, val spriteSheetOffsetX
     }
 
     private fun doWeAreStunned() {
-
         animation = dieAnim
         xVel = 0f
-        yVel -= GRAVITY * Gdx.graphics.deltaTime
+        doFalling()
         stunCounter += yVel * Gdx.graphics.deltaTime
-        println("stunned $stunCounter")
+    }
+
+    private fun doFalling() {
+        yVel -= GRAVITY * Gdx.graphics.deltaTime
+        fallTimer += Gdx.graphics.deltaTime
     }
 
     private fun weAreOn(s: String) = backgroundCollisions.contains(s)
 
     private fun doWeAreNotStunned() {
-        collisionTest(collisionShapeFeet, background)
+        checkBackgroundColisions()
+        checkEnemyColisions()
+        checkExitColisions()
+    }
 
+    private fun checkBackgroundColisions() {
+        collisionTest(collisionShapeFeet, background)
         if (weAreOn("ladder")) {
             xVel = 0f
             yVel = 0f
-
             doClimbingDown()
             animation = climbAnim
         }
         if (weAreOn("platform")) {
-            //  xVel=0f
-            // yVel=0f
-
             yVel = 0f
             doRunning()
-
             doJumping()
+            fallTimer = 0f
         }
         if (weAreOn("ladder") || weAreOn("platform")) {
             doClimbingUp()
         }
         if (!weAreOn("ladder") && !weAreOn("platform")) {
-            yVel -= GRAVITY * Gdx.graphics.deltaTime
+            if (fallTimer < 0.1f) doJumping()
+            doFalling()
             animation = jumpAnimation
         }
-
-        checkGhostColisions()
-        checkExitColisions()
-
     }
 
-    private fun checkGhostColisions() {
+    private fun checkEnemyColisions() {
         if (collisionTest(pimpGame.enemies)) {
-            println("collison")
             stunCounter = 64f
-            playSound(stunSound)
+            playSound(pimpGame.stunSound)
         }
     }
 
     private fun checkExitColisions() {
         if (collisionTestRect(pimpGame.exits)) {
-            playSound(bonusSound)
+            playSound(pimpGame.bonusSound)
             pimpGame.levelComplete(this)
         }
     }
@@ -156,7 +145,8 @@ class PimpGuy(val player: Player, val pimpGame: PimpGame, val spriteSheetOffsetX
         if (input.fire) {
             yVel = 100f
             animation = jumpAnimation
-            playSound(jumpSound)
+            playSound(pimpGame.jumpSound)
+            fallTimer = 100f
         }
     }
 

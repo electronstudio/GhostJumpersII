@@ -2,6 +2,7 @@ package com.mygdx.game
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.Texture
@@ -17,6 +18,7 @@ import uk.me.fantastic.retro.games.RetroGame
 import uk.me.fantastic.retro.screens.GameSession
 import uk.me.fantastic.retro.unigame.Background
 
+/* The God class */
 class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         RetroGame(session,
                 320f, 240f, font, font) {
@@ -25,14 +27,17 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
 
     val bgTexture = Background.renderTileMapToTexture(background)
 
-    //val mapRenderer = OrthogonalTiledMapRenderer(background, 1f)
-
     val spriteSheet = TextureRegion(Texture("mods/PimpGame/simples_pimplest.png"))
+    val jumpSound = Gdx.audio.newSound(FileHandle("mods/PimpGame/jump_jade.wav"))
+    val stunSound = Gdx.audio.newSound(FileHandle("mods/PimpGame/fall_jade.wav"))
+    val bonusSound = Gdx.audio.newSound(FileHandle("mods/PimpGame/bonus_jade.wav"))
+    val spawnSound = Gdx.audio.newSound(FileHandle("mods/PimpGame/hit_jade.wav"))
 
     val textures = spriteSheet.split(16, 16)
     val enemies = ArrayList<RetroSprite>()
     val exits = ArrayList<Rectangle>()
     val entry = Rectangle()
+    val colors = Animation<Color>(0.1f, Color.BLACK, Color.RED)
 
     val spawners = ArrayList<GhostFactory>()
 
@@ -43,11 +48,8 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     val timeLimit: Float = difficulty.toFloat() * 10.0f + 50f
     var timer = 0f
 
-
     init {
-
         for (layer in background.layers) {
-            //  println("layer $layer")
             for (obj in layer.objects) {
                 val type = obj.properties["type"]
                 if (type != null && obj is RectangleMapObject) {
@@ -88,7 +90,6 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
                                     rightWalk = obj.properties["rightWalk"] as Float)
                             enemies.add(goblin)
                             allSprites.add(goblin)
-
                         }
                     }
                 }
@@ -114,16 +115,12 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.P)) {
-            println(App.Companion.testSandbox())
+            println(App.Companion.testSandbox()) // should crash if sandbox is working
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
             levelComplete(null)
         }
     }
-
-
-    val colors = Animation<Color>(0.1f, Color.BLACK, Color.RED
-    )
 
     override fun doDrawing(batch: Batch) {
 
@@ -152,7 +149,6 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         batch.end()
     }
 
-
     fun drawSprites(batch: Batch) {
 
         allSprites.forEach {
@@ -165,13 +161,10 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     }
 
     private fun checkForNewPlayerJoins() {
-        for (i in noOfPlayersInGameAlready until players.size) { // loop enters only when there is a new player joined
-            // different players get different texturegions within the spritesheet
-            // these are the offsets in the sheet
-
+        for (i in noOfPlayersInGameAlready until players.size) { // loop only when there is a new player(s) joined
             val xy: Pair<Int, Int> = when (i) {
-                0 -> Pair(26, 1)
-                1 -> Pair(32, 1)
+                0 -> Pair(26, 1)// different players get different texturegions within the spritesheet
+                1 -> Pair(32, 1)// these are the offsets in the sheet
                 2 -> Pair(38, 1)
                 3 -> Pair(26, 2)
                 4 -> Pair(32, 2)
@@ -213,5 +206,9 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
 
     override fun dispose() {
         spriteSheet.texture.dispose()
+        jumpSound.dispose()
+        stunSound.dispose()
+        bonusSound.dispose()
+        spawnSound.dispose()
     }
 }
