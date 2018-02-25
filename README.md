@@ -15,10 +15,10 @@ SoundFX are by JDWasabi https://wasabi-playground.com/about
 
 TODO:
 
-[X] <strike>soundfx</strike>
-[X] <strike>option for smooth motion</strike>
-[X] <strike>make level 2 blue</strike>
-[X] BETA
+- [x] <strike>soundfx</strike>
+- [x] <strike>option for smooth motion</strike>
+- [x] <strike>make level 2 blue</strike>
+- [x] BETA
 * enemies that can climb down
 [X] level 3
 * code tidy
