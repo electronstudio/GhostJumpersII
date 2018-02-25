@@ -141,6 +141,11 @@
    <property name="platform" type="bool" value="true"/>
   </properties>
  </tile>
+    <tile id="400">
+        <properties>
+            <property name="xPush" type="float" value="-50"/>
+        </properties>
+    </tile>
  <tile id="600">
   <properties>
    <property name="ladder" type="bool" value="true"/>

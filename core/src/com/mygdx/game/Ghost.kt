@@ -1,13 +1,14 @@
 package com.mygdx.game
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Rectangle
 
 class Ghost(val background: TiledMap, val initX: Float = 30f, val initY: Float = 230f, val speed: Float = 50f,
-            val pimpGame: PimpGame, val spriteSheetOffsetX: Int = 26, val spriteSheetOffsetY: Int = 7
+            val pimpGame: PimpGame, textureRegion: TextureRegion
             ) :
-        RetroSprite(pimpGame.textures[spriteSheetOffsetY][spriteSheetOffsetX]) {
+        RetroSprite(textureRegion) {
 
     override var spriteCollisionShape = Rectangle(4f, 0f, 8f, 4f)
 
@@ -15,6 +16,7 @@ class Ghost(val background: TiledMap, val initX: Float = 30f, val initY: Float =
         x = initX
         y = initY
         xVel = speed
+        if (speed < 0) setScale(-1f, 1f)
     }
 
     override fun update() {

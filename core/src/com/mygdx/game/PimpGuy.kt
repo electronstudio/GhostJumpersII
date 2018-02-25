@@ -19,6 +19,7 @@ class PimpGuy(val player: Player, val pimpGame: PimpGame, val spriteSheetOffsetX
     val textures = pimpGame.textures
     val input: InputDevice
 
+    val defaultAnim = Animation(0.1f, pimpGame.textures[spriteSheetOffsetY][spriteSheetOffsetX])
     val jumpFrames = arrayOf(textures[spriteSheetOffsetY][spriteSheetOffsetX + 1])
     val runFrames = arrayOf(
             textures[spriteSheetOffsetY][spriteSheetOffsetX + 1], textures[spriteSheetOffsetY][spriteSheetOffsetX + 2])
@@ -36,8 +37,8 @@ class PimpGuy(val player: Player, val pimpGame: PimpGame, val spriteSheetOffsetX
 
     var stunCounter = 0f
 
-    override var spriteCollisionShape = Rectangle(4f, 4f, 8f, 8f)
-    var collisionShapeFeet = Rectangle(4f, -2f, 8f, 4f)
+    override val spriteCollisionShape = Rectangle(4f, 4f, 8f, 8f)
+    val collisionShapeFeet = Rectangle(4f, -2f, 8f, 4f)
 
     init {
         x = 30f
@@ -58,10 +59,19 @@ class PimpGuy(val player: Player, val pimpGame: PimpGame, val spriteSheetOffsetX
             doWeAreNotStunned()
         }
 
-        flip = (xVel < 0f)
+
         x += xVel * Gdx.graphics.deltaTime
         y += yVel * Gdx.graphics.deltaTime
         checkOutOfBounds()
+        checkPushes()
+    }
+
+    private fun checkPushes() {
+        for (c in backgroundCollisions) {
+            if (c.equals("xPush")) {
+                xVel = -50f
+            }
+        }
     }
 
     private fun checkOutOfBounds() {
@@ -110,10 +120,12 @@ class PimpGuy(val player: Player, val pimpGame: PimpGame, val spriteSheetOffsetX
 
         checkGhostColisions()
         checkExitColisions()
+
     }
 
     private fun checkGhostColisions() {
-        if (collisionTest(pimpGame.ghosts)) {
+        if (collisionTest(pimpGame.enemies)) {
+            println("collison")
             stunCounter = 64f
             playSound(stunSound)
         }
@@ -131,10 +143,12 @@ class PimpGuy(val player: Player, val pimpGame: PimpGame, val spriteSheetOffsetX
         if (input.leftStick.x < -0.3f || input.rightStick.x < -0.3f) {
             xVel = -50f
             animation = runningAnim
+            flip = (xVel < 0f)
         }
         if (input.leftStick.x > 0.3f || input.rightStick.x > 0.3f) {
             xVel = 50f
             animation = runningAnim
+            flip = (xVel < 0f)
         }
     }
 

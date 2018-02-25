@@ -30,7 +30,7 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     val spriteSheet = TextureRegion(Texture("mods/PimpGame/simples_pimplest.png"))
 
     val textures = spriteSheet.split(16, 16)
-    val ghosts = ArrayList<RetroSprite>()
+    val enemies = ArrayList<RetroSprite>()
     val exits = ArrayList<Rectangle>()
     val entry = Rectangle()
 
@@ -70,10 +70,25 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
                                             mintime = obj.properties["minTime"] as Float / (difficulty.toFloat() / 2f),
                                             maxTime = obj.properties["maxTime"] as Float / (difficulty.toFloat() / 2f),
                                             pimpGame = this,
-                                            spriteSheetOffsetX = obj.properties["spriteSheetOffsetX"] as Int,
-                                            spriteSheetOffsetY = obj.properties["spriteSheetOffsetY"] as Int
+                                            textureRegion =
+                                            textures[obj.properties["spriteSheetOffsetY"] as Int]
+                                                    [obj.properties["spriteSheetOffsetX"] as Int]
+
                                     )
                             )
+                        }
+                        "goblin" -> {
+                            val goblin = Goblin(initX = obj.rectangle.x,
+                                    initY = obj.rectangle.y,
+                                    speed = obj.properties["speed"] as Float * (difficulty.toFloat() / 2f),
+                                    pimpGame = this,
+                                    animation = Animation(0.1f, textures[5][27], textures[5][28]),
+                                    background = background,
+                                    leftWalk = obj.properties["leftWalk"] as Float,
+                                    rightWalk = obj.properties["rightWalk"] as Float)
+                            enemies.add(goblin)
+                            allSprites.add(goblin)
+
                         }
                     }
                 }
@@ -101,7 +116,7 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         if (Gdx.input.isKeyPressed(Input.Keys.P)) {
             println(App.Companion.testSandbox())
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
             levelComplete(null)
         }
     }
@@ -177,8 +192,8 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         private val font = BitmapFont(Gdx.files.internal("mods/PimpGame/c64_low3_black.fnt")) // for drawing text
         val maps = listOf<String>(
                 "mods/PimpGame/level1.tmx",
-                "mods/PimpGame/level2.tmx"
-                // "mods/PimpGame/level3.tmx"
+                "mods/PimpGame/level2.tmx",
+                "mods/PimpGame/level3.tmx"
         )
     }
 

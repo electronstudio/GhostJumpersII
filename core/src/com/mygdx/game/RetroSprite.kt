@@ -1,7 +1,6 @@
 package com.mygdx.game
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
@@ -9,18 +8,18 @@ import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 import com.badlogic.gdx.math.Rectangle
 
-open class RetroSprite(textureRegion: TextureRegion, var animation: Animation<TextureRegion>? = null) : Sprite
+abstract class RetroSprite(textureRegion: TextureRegion) : Sprite
 (textureRegion) {
-    //val bgCollisionPoints = listOf<Vec>(Vec(0f,0f), Vec(16f, 0f))
+    var animation: Animation<TextureRegion>? = null
 
-    constructor(tex: Texture) : this(TextureRegion(tex))
+    constructor(a: Animation<TextureRegion>) : this(a.keyFrames.first()) {
+        animation = a
+    }
 
-    open val spriteCollisionShape = Rectangle(0f, 0f, textureRegion.regionWidth.toFloat(), textureRegion.regionHeight
-            .toFloat())
+    abstract val spriteCollisionShape: Rectangle //= Rectangle(0f, 0f, textureRegion.regionWidth.toFloat(), textureRegion.regionHeight .toFloat())
 
     var dead = false
 
-    //  val spriteCollisions = ArrayList<String>()
     val backgroundCollisions = HashSet<String>()
 
     var xVel = 0f
@@ -28,9 +27,10 @@ open class RetroSprite(textureRegion: TextureRegion, var animation: Animation<Te
 
     var timer = 0f
 
-    val defaultAnim = Animation(0.1f, textureRegion)
+
 
     var flip = false
+
 
     open fun update() {
         timer += Gdx.graphics.deltaTime
@@ -40,27 +40,18 @@ open class RetroSprite(textureRegion: TextureRegion, var animation: Animation<Te
         }
     }
 
-    var savedX = 0f
-    var savedY = 0f
 
-    fun savePosition() {
-        savedX = x
-        savedY = y
-    }
-
-    fun restorePosition() {
-        x = savedX
-        y = savedY
-    }
 
     fun collisionTest(others: java.util.ArrayList<RetroSprite>): Boolean {
+
         val rect1 = Rectangle(x + spriteCollisionShape.x, y + spriteCollisionShape.y, spriteCollisionShape.width, spriteCollisionShape.height)
         val rect2 = Rectangle()
         others.forEach {
+
             rect2.x = it.x + it.spriteCollisionShape.x
             rect2.y = it.y + it.spriteCollisionShape.y
-            rect2.width = it.width
-            rect2.height = it.height
+            rect2.width = it.spriteCollisionShape.width
+            rect2.height = it.spriteCollisionShape.height
             if (rect1.overlaps(rect2)) {
                 return true
             }
@@ -102,7 +93,5 @@ open class RetroSprite(textureRegion: TextureRegion, var animation: Animation<Te
         }
     }
 
-//    open fun onPlatform(): Boolean{
-//
-//    }
+
 }
