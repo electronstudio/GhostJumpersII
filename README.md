@@ -24,7 +24,7 @@ TODO:
 - [x] BETA
 - [ ] enemies that can climb down
 - [x] level 3
-- [ ] code tidy
+- [x] code tidy
 - [ ] winner
 - [ ] scores
 - [ ] scrolling

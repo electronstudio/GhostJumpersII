@@ -65,8 +65,8 @@
    <properties>
     <property name="leftWalk" type="float" value="104"/>
     <property name="rightWalk" type="float" value="0"/>
-    <property name="speed" type="float" value="30"/>
-    <property name="spriteSheetOffsetX" type="int" value="32"/>
+    <property name="speed" type="float" value="35"/>
+    <property name="spriteSheetOffsetX" type="int" value="25"/>
     <property name="spriteSheetOffsetY" type="int" value="7"/>
    </properties>
   </object>
@@ -74,7 +74,7 @@
    <properties>
     <property name="leftWalk" type="float" value="92"/>
     <property name="rightWalk" type="float" value="0"/>
-    <property name="speed" type="float" value="30"/>
+    <property name="speed" type="float" value="35"/>
     <property name="spriteSheetOffsetX" type="int" value="32"/>
     <property name="spriteSheetOffsetY" type="int" value="7"/>
    </properties>
@@ -83,7 +83,7 @@
    <properties>
     <property name="leftWalk" type="float" value="92"/>
     <property name="rightWalk" type="float" value="0"/>
-    <property name="speed" type="float" value="30"/>
+    <property name="speed" type="float" value="20"/>
     <property name="spriteSheetOffsetX" type="int" value="32"/>
     <property name="spriteSheetOffsetY" type="int" value="7"/>
    </properties>
@@ -101,7 +101,7 @@
    <properties>
     <property name="leftWalk" type="float" value="0"/>
     <property name="rightWalk" type="float" value="92"/>
-    <property name="speed" type="float" value="30"/>
+    <property name="speed" type="float" value="20"/>
     <property name="spriteSheetOffsetX" type="int" value="32"/>
     <property name="spriteSheetOffsetY" type="int" value="7"/>
    </properties>
@@ -110,7 +110,7 @@
    <properties>
     <property name="leftWalk" type="float" value="0"/>
     <property name="rightWalk" type="float" value="104"/>
-    <property name="speed" type="float" value="30"/>
+    <property name="speed" type="float" value="20"/>
     <property name="spriteSheetOffsetX" type="int" value="32"/>
     <property name="spriteSheetOffsetY" type="int" value="7"/>
    </properties>
