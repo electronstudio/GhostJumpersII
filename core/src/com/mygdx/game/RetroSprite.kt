@@ -78,7 +78,8 @@ abstract class RetroSprite(textureRegion: TextureRegion) : Sprite
 
     /* only tests the 4 corners of the collision box */
     fun collisionTest(collisionShape: Rectangle, background: TiledMap) {
-        backgroundCollisions.removeIf { s -> true } // is this clearing faster than making a new HashSet object?
+        backgroundCollisions.removeAll(backgroundCollisions)
+     //   backgroundCollisions.removeIf { _ -> true } // is this clearing faster than making a new HashSet object?
         background.layers.forEach {
             if (it is TiledMapTileLayer) {
                 testPointBackgroundCollision(x + collisionShape.x, y + collisionShape.y, it)

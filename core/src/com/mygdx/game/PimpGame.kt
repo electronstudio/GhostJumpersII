@@ -28,10 +28,10 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     val bgTexture = Background.renderTileMapToTexture(background)
 
     val spriteSheet = TextureRegion(Texture("mods/PimpGame/simples_pimplest.png"))
-    val jumpSound = Gdx.audio.newSound(FileHandle("mods/PimpGame/jump_jade.wav"))
-    val stunSound = Gdx.audio.newSound(FileHandle("mods/PimpGame/fall_jade.wav"))
-    val bonusSound = Gdx.audio.newSound(FileHandle("mods/PimpGame/bonus_jade.wav"))
-    val spawnSound = Gdx.audio.newSound(FileHandle("mods/PimpGame/hit_jade.wav"))
+    val jumpSound = Gdx.audio.newSound(Gdx.files.internal("mods/PimpGame/jump_jade.wav"))
+    val stunSound = Gdx.audio.newSound(Gdx.files.internal("mods/PimpGame/fall_jade.wav"))
+    val bonusSound = Gdx.audio.newSound(Gdx.files.internal("mods/PimpGame/bonus_jade.wav"))
+    val spawnSound = Gdx.audio.newSound(Gdx.files.internal("mods/PimpGame/hit_jade.wav"))
 
     val textures = spriteSheet.split(16, 16)
     val enemies = ArrayList<RetroSprite>()
@@ -97,15 +97,22 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         }
     }
 
-    override fun doLogic(delta: Float) {
-        timer += delta
+    override fun doLogic(deltaTime: Float) {
+        timer += deltaTime
 
         allSprites.forEach {
             it.update()
         }
-        allSprites.removeIf { it.dead }
 
-        spawners.forEach { it.update(delta) }
+
+        val deadSprites:List<RetroSprite> = allSprites.filter { it.dead }
+        deadSprites.forEach {
+            allSprites.remove(it)
+        }// JDK 8 / Android 7: allSprites.removeIf { it.dead }
+
+
+
+        spawners.forEach { it.update(deltaTime) }
 
         checkForNewPlayerJoins()
 

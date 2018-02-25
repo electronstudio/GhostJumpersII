@@ -1,9 +1,8 @@
 # Ghost Jumpers
-Example RetroWar minigame
+Demo RetroWar minigame
 
 Copyright 2017 Electron Studio
 All rights reserved
-
 
 Originally an example of how to make a minigame that could run standalone and also
 be loaded into RetroWar as a plugin.  Still useful for that purpose but it's now

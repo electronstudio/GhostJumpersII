@@ -7,6 +7,7 @@ buildscript {
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
     dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.8.2'
 
@@ -31,7 +32,7 @@ allprojects {
         roboVMVersion = '2.3.0'
 
         gdxUtilsVersion = '0.13.3'
-        kotlinVersion = '1.2.10'
+        kotlinVersion = '1.2.21'
     }
 
     repositories {
@@ -68,6 +69,27 @@ project(":desktop") {
     //    compile project(":retrogame")
       //  compile project(":retrogame")
      //   compile project(":retrogame:desktop")
+    }
+}
+
+
+project(":android") {
+    apply plugin: "android"
+    apply plugin: "kotlin-android"
+
+    configurations { natives }
+
+    dependencies {
+        compile project(":core")
+        compile fileTree('../../retrogame/core/build/libs')
+        compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-controllers-android:$gdxVersion"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
+        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
+        compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     }
 }
 
