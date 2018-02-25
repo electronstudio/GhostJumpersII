@@ -2,8 +2,10 @@ package com.mygdx.game
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureRegion
@@ -38,7 +40,7 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
 
     val allSprites = ArrayList<RetroSprite>()
 
-    val timeLimit: Float = difficulty.toFloat()
+    val timeLimit: Float = difficulty.toFloat() * 10.0f + 50f
     var timer = 0f
 
 
@@ -99,7 +101,14 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         if (Gdx.input.isKeyPressed(Input.Keys.P)) {
             println(App.Companion.testSandbox())
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            levelComplete(null)
+        }
     }
+
+
+    val colors = Animation<Color>(0.1f, Color.BLACK, Color.RED
+    )
 
     override fun doDrawing(batch: Batch) {
 
@@ -115,7 +124,15 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         batch.end()
 
         batch.begin()
+
+        if (timeleft() < 21) {
+            font.color = colors.getKeyFrame(timer, true)
+        } else {
+            font.color = Color.WHITE
+        }
+
         font.draw(batch, "${timeleft()}", 150f, 240f)
+        font.color = Color.WHITE
         font.draw(batch, "${(difficulty - 1) * maps.size + level + 1}", 0f, 240f)
         batch.end()
     }
@@ -134,20 +151,20 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
 
     private fun checkForNewPlayerJoins() {
         for (i in noOfPlayersInGameAlready until players.size) { // loop enters only when there is a new player joined
-            var xOffset = 26 // different players get different texturegions within the spritesheet
-            var yOffset = 1  // these are the offsets in the sheet
-            if (i == 1) {
-                xOffset = 32
-                yOffset = 1
-            } else if (i == 2) {
-                xOffset = 26
-                yOffset = 5
-            } else if (i == 3) {
-                xOffset = 26
-                yOffset = 6
+            // different players get different texturegions within the spritesheet
+            // these are the offsets in the sheet
+
+            val xy: Pair<Int, Int> = when (i) {
+                0 -> Pair(26, 1)
+                1 -> Pair(32, 1)
+                2 -> Pair(38, 1)
+                3 -> Pair(26, 2)
+                4 -> Pair(32, 2)
+                5 -> Pair(38, 2)
+                else -> Pair(26, 1)
             }
 
-            val pimp = PimpGuy(players[i], this, xOffset, yOffset)
+            val pimp = PimpGuy(players[i], this, xy.first, xy.second)
             pimp.x = entry.x
             pimp.y = entry.y
 
@@ -165,11 +182,11 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         )
     }
 
-    fun levelComplete(winner: PimpGuy) {
+    fun levelComplete(winner: PimpGuy?) {
         if (level == maps.lastIndex) {
-            session.nextGame = PimpGame(session, difficulty + 1, timeLimit, 0)
+            session.nextGame = PimpGame(session, difficulty + 1, 0)
         } else {
-            session.nextGame = PimpGame(session, difficulty, timeLimit, level + 1)
+            session.nextGame = PimpGame(session, difficulty, level + 1)
         }
         gameover()
     }
