@@ -8,6 +8,6 @@ import uk.me.fantastic.retro.screens.GenericTitleScreen;
 public class MyTitleScreen extends GenericTitleScreen {
 
     public MyTitleScreen() {
-        super(320f, 240f, new BitmapFont(Gdx.files.internal("small.fnt")), "Ghost Jumpers");
+        super(160f, 120f, new BitmapFont(Gdx.files.internal("small.fnt")), "[RED]Ghost Jumpers[]");
     }
 }

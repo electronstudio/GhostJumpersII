@@ -2,11 +2,13 @@ package com.mygdx.game
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Animation
+import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 import com.badlogic.gdx.math.Rectangle
+import uk.me.fantastic.retro.Prefs
 
 /*
  * Some functions all our sprites have in common
@@ -37,7 +39,11 @@ abstract class RetroSprite(textureRegion: TextureRegion) : Sprite
      */
     abstract fun update()
 
-    /* Some sprites dont animate so need to call this */
+    override fun draw(batch: Batch?) {
+        super.draw(batch)
+    }
+
+    /* Some sprites dont animate so dont need to call this */
     fun doAnimation() {
         timer += Gdx.graphics.deltaTime
         animation?.let {

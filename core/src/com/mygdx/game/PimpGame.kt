@@ -14,6 +14,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.math.Rectangle
 import uk.me.fantastic.retro.App
+import uk.me.fantastic.retro.Prefs
 import uk.me.fantastic.retro.games.RetroGame
 import uk.me.fantastic.retro.screens.GameSession
 import uk.me.fantastic.retro.unigame.Background
@@ -130,6 +131,7 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     }
 
     override fun doDrawing(batch: Batch) {
+        Prefs.BinPref.BILINEAR.filter(bgTexture)
 
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
