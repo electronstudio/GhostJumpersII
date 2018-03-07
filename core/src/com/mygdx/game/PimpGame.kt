@@ -2,7 +2,6 @@ package com.mygdx.game
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
-import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.Texture
@@ -16,6 +15,7 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Align
 import uk.me.fantastic.retro.App
 import uk.me.fantastic.retro.Prefs
+import uk.me.fantastic.retro.games.Player
 import uk.me.fantastic.retro.games.RetroGame
 import uk.me.fantastic.retro.screens.GameSession
 import uk.me.fantastic.retro.unigame.Background
@@ -35,11 +35,14 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     val bonusSound = Gdx.audio.newSound(Gdx.files.internal("mods/PimpGame/bonus_jade.wav"))
     val spawnSound = Gdx.audio.newSound(Gdx.files.internal("mods/PimpGame/hit_jade.wav"))
 
+    val music = Gdx.audio.newMusic(Gdx.files.internal("mods/PimpGame/justin1.wav"))
+
     val textures = spriteSheet.split(16, 16)
     val enemies = ArrayList<RetroSprite>()
     val exits = ArrayList<Rectangle>()
     val entry = Rectangle()
-    val colors = Animation<Color>(0.1f, Color.BLACK, Color.RED)
+    val redFlash = Animation<Color>(0.1f, Color.BLACK, Color.RED)
+    val multiFlash = Animation<String>(1f / 30f, "RED", "PURPLE", "BLUE", "CYAN", "GREEN", "YELLOW")
 
     val spawners = ArrayList<GhostFactory>()
 
@@ -50,9 +53,14 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     val timeLimit: Float = difficulty.toFloat() * 10.0f + 50f
     var timer = 0f
 
-    val scoreDisplay=players.sumBy { it.score }
+    val scoreDisplay = players.sumBy { it.score }
+
+    var levelFinished = false
+    var winner: Player? = null
+    var endOfLevelMessage = ""
 
     init {
+        music.isLooping = true
         for (layer in background.layers) {
             for (obj in layer.objects) {
                 val type = obj.properties["type"]
@@ -103,26 +111,33 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
 
     override fun doLogic(deltaTime: Float) {
         timer += deltaTime
+        if (levelFinished) {
+            if (players.any { it.input?.fire }) {
+                gameover()
+            }
+        } else {
+            doGameLogic()
+        }
+    }
+
+    private fun doGameLogic() {
 
         allSprites.forEach {
             it.update()
         }
 
-
-        val deadSprites:List<RetroSprite> = allSprites.filter { it.dead }
+        val deadSprites: List<RetroSprite> = allSprites.filter { it.dead }
         deadSprites.forEach {
             allSprites.remove(it)
-        }// JDK 8 / Android 7: allSprites.removeIf { it.dead }
+        } // JDK 8 / Android 7: allSprites.removeIf { it.dead }
 
-
-
-        spawners.forEach { it.update(deltaTime) }
+        spawners.forEach { it.update(Gdx.graphics.deltaTime) }
 
         checkForNewPlayerJoins()
 
         if (timeleft() <= 0) {
             session.nextGame = null
-            gameover()
+            levelFinished = true
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.P)) {
@@ -134,6 +149,16 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     }
 
     override fun doDrawing(batch: Batch) {
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+        if (levelFinished) {
+            drawScoreTable(batch)
+        } else {
+            drawGame(batch)
+        }
+    }
+
+    private fun drawGame(batch: Batch) {
         Prefs.BinPref.BILINEAR.filter(bgTexture)
 
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
@@ -150,23 +175,41 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         batch.begin()
 
         if (timeleft() < 21) {
-            font.color = colors.getKeyFrame(timer, true)
+            font.color = redFlash.getKeyFrame(timer, true)
         } else {
             font.color = Color.WHITE
         }
 
         font.draw(batch, "${timeleft()}", 150f, 240f)
         font.color = Color.WHITE
-        font.draw(batch, "L${(difficulty - 1) * maps.size + level + 1}", 0f, 240f)
-        font.draw(batch,"$scoreDisplay",0f,240f,320f,Align.right,false)
+        font.draw(batch, "L${friendlyLevelNumber()}", 0f, 240f)
+        font.draw(batch, "$scoreDisplay PTS", 0f, 240f, 320f, Align.right, false)
         batch.end()
     }
+
+    private fun friendlyLevelNumber() = (difficulty - 1) * maps.size + level + 1
 
     fun drawSprites(batch: Batch) {
 
         allSprites.forEach {
             it.draw(batch)
         }
+    }
+
+    private fun friendlyCompletionStatus() = if (timeleft() > 0) "[BLUE]COMPLETE[]" else "[RED]TIME OVER[]"
+
+    private fun drawScoreTable(batch: Batch) {
+
+        val s = "\n\n\nLEVEL ${friendlyLevelNumber()}\n\n${endOfLevelMessage}\n" +
+                players.joinToString("") {
+                    (if (it == winner) "[${multiFlash.getKeyFrame(timer, true)}]" else "") +
+                            "\n\n${it.name} ${it.score}[]"
+                } +
+                "\n\n\nTOTAL SCORE ${players.sumBy { it.score }}"
+
+        batch.begin()
+        font.draw(batch, s, 0f, 240f, 320f, Align.center, false)
+        batch.end()
     }
 
     private fun timeleft(): Int {
@@ -204,21 +247,29 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     }
 
     fun levelComplete(winner: PimpGuy?) {
-        if(winner!=null) {
-            winner.player.score += timeleft()*difficulty
+        this.winner = winner?.player
+        music.stop()
+        if (winner != null) {
+            winner.player.score += timeleft() * difficulty
         }
         if (level == maps.lastIndex) {
             session.nextGame = PimpGame(session, difficulty + 1, 0)
         } else {
             session.nextGame = PimpGame(session, difficulty, level + 1)
         }
-        gameover()
+        levelFinished = true
+        endOfLevelMessage = friendlyCompletionStatus()
+        //gameover()
     }
 
     // These methods must be implemented but don't have to do anything
-    override fun show() {}
+    override fun show() {
+        music.play()
+    }
 
-    override fun hide() {}
+    override fun hide() {
+        music.stop()
+    }
 
     override fun dispose() {
         spriteSheet.texture.dispose()
@@ -226,5 +277,6 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         stunSound.dispose()
         bonusSound.dispose()
         spawnSound.dispose()
+        music.dispose()
     }
 }

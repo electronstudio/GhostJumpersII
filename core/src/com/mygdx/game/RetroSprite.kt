@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 import com.badlogic.gdx.math.Rectangle
-import uk.me.fantastic.retro.Prefs
 
 /*
  * Some functions all our sprites have in common
@@ -85,7 +84,7 @@ abstract class RetroSprite(textureRegion: TextureRegion) : Sprite
     /* only tests the 4 corners of the collision box */
     fun collisionTest(collisionShape: Rectangle, background: TiledMap) {
         backgroundCollisions.removeAll(backgroundCollisions)
-     //   backgroundCollisions.removeIf { _ -> true } // is this clearing faster than making a new HashSet object?
+        //   backgroundCollisions.removeIf { _ -> true } // is this clearing faster than making a new HashSet object?
         background.layers.forEach {
             if (it is TiledMapTileLayer) {
                 testPointBackgroundCollision(x + collisionShape.x, y + collisionShape.y, it)

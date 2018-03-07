@@ -17,9 +17,9 @@ class PimpGameFactory : AbstractGameFactory("Pimp Game", null) {
     override val image by lazy { Texture(Gdx.files.internal("badlogic.jpg")) }
 
     override fun create(session: GameSession): Game {
-        if(Gdx.app.type==Application.ApplicationType.Desktop) {
+        if (Gdx.app.type == Application.ApplicationType.Desktop) {
             val controller1 = App.mappedControllers.firstOrNull()
-            if(controller1!=null) {
+            if (controller1 != null) {
                 session.preSelectedInputDevice = GamepadInput(controller1)
             }
         }
