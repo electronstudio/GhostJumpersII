@@ -17,6 +17,7 @@ import uk.me.fantastic.retro.App
 import uk.me.fantastic.retro.Prefs
 import uk.me.fantastic.retro.games.Player
 import uk.me.fantastic.retro.games.RetroGame
+import uk.me.fantastic.retro.isMobile
 import uk.me.fantastic.retro.screens.GameSession
 import uk.me.fantastic.retro.unigame.Background
 
@@ -34,6 +35,8 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     val stunSound = Gdx.audio.newSound(Gdx.files.internal("mods/PimpGame/fall_jade.wav"))
     val bonusSound = Gdx.audio.newSound(Gdx.files.internal("mods/PimpGame/bonus_jade.wav"))
     val spawnSound = Gdx.audio.newSound(Gdx.files.internal("mods/PimpGame/hit_jade.wav"))
+
+    val controlsImageLayer = Texture("mods/PimpGame/controls.png")
 
     val music = Gdx.audio.newMusic(Gdx.files.internal("mods/PimpGame/justin1.wav"))
 
@@ -185,7 +188,17 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         font.draw(batch, "L${friendlyLevelNumber()}", 0f, 240f)
         font.draw(batch, "$scoreDisplay PTS", 0f, 240f, 320f, Align.right, false)
         batch.end()
+
+        if (isMobile() && noFingersTouchingScreen()) {
+            batch.begin()
+            batch.draw(controlsImageLayer, 0f, 0f)
+            batch.end()
+        }
     }
+
+    private fun noFingersTouchingScreen(): Boolean =
+            !Gdx.input.isTouched()
+
 
     private fun friendlyLevelNumber() = (difficulty - 1) * maps.size + level + 1
 

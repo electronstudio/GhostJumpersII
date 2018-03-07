@@ -8,6 +8,7 @@ import uk.me.fantastic.retro.games.AbstractGameFactory
 import uk.me.fantastic.retro.games.Game
 import uk.me.fantastic.retro.input.GamepadInput
 import uk.me.fantastic.retro.input.SimpleTouchscreenInput
+import uk.me.fantastic.retro.isMobile
 import uk.me.fantastic.retro.screens.GameSession
 
 /*
@@ -23,7 +24,7 @@ class PimpGameFactory : AbstractGameFactory("Pimp Game", null) {
             if (controller1 != null) {
                 session.preSelectedInputDevice = GamepadInput(controller1)
             }
-        } else if (Gdx.app.type == Application.ApplicationType.Android || Gdx.app.type == Application.ApplicationType.iOS) {
+        } else if (isMobile()) {
             session.preSelectedInputDevice = SimpleTouchscreenInput()
         }
         return PimpGame(session, 1, 0)
