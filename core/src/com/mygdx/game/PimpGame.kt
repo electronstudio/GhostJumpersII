@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.utils.Align
 import uk.me.fantastic.retro.App
 import uk.me.fantastic.retro.Prefs
 import uk.me.fantastic.retro.games.RetroGame
@@ -48,6 +49,8 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
 
     val timeLimit: Float = difficulty.toFloat() * 10.0f + 50f
     var timer = 0f
+
+    val scoreDisplay=players.sumBy { it.score }
 
     init {
         for (layer in background.layers) {
@@ -154,7 +157,8 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
 
         font.draw(batch, "${timeleft()}", 150f, 240f)
         font.color = Color.WHITE
-        font.draw(batch, "${(difficulty - 1) * maps.size + level + 1}", 0f, 240f)
+        font.draw(batch, "L${(difficulty - 1) * maps.size + level + 1}", 0f, 240f)
+        font.draw(batch,"$scoreDisplay",0f,240f,320f,Align.right,false)
         batch.end()
     }
 
@@ -200,6 +204,9 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     }
 
     fun levelComplete(winner: PimpGuy?) {
+        if(winner!=null) {
+            winner.player.score += timeleft()*difficulty
+        }
         if (level == maps.lastIndex) {
             session.nextGame = PimpGame(session, difficulty + 1, 0)
         } else {
