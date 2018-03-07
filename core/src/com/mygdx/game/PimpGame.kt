@@ -141,6 +141,7 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         if (timeleft() <= 0) {
             session.nextGame = null
             levelFinished = true
+            endOfLevelMessage = "[RED]TIME OVER[]"
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.P)) {
@@ -209,9 +210,11 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         }
     }
 
-    private fun friendlyCompletionStatus() = if (timeleft() > 0) "[BLUE]COMPLETE[]" else "[RED]TIME OVER[]"
+
 
     private fun drawScoreTable(batch: Batch) {
+
+        println("endoflevelmessage $endOfLevelMessage")
 
         val s = "\n\n\nLEVEL ${friendlyLevelNumber()}\n\n${endOfLevelMessage}\n" +
                 players.joinToString("") {
@@ -271,13 +274,14 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
             session.nextGame = PimpGame(session, difficulty, level + 1)
         }
         levelFinished = true
-        endOfLevelMessage = friendlyCompletionStatus()
-        //gameover()
+        endOfLevelMessage = "[BLUE]COMPLETE[]"
+        //gameover(
     }
 
     // These methods must be implemented but don't have to do anything
     override fun show() {
-        music.play()
+        music.volume = Prefs.NumPref.MUSIC_VOLUME.asVolume()
+        if (Prefs.BinPref.MUSIC.isEnabled()) music.play()
     }
 
     override fun hide() {
