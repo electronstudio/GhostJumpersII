@@ -7,6 +7,7 @@ import uk.me.fantastic.retro.App
 import uk.me.fantastic.retro.games.AbstractGameFactory
 import uk.me.fantastic.retro.games.Game
 import uk.me.fantastic.retro.input.GamepadInput
+import uk.me.fantastic.retro.input.KeyboardMouseInput
 import uk.me.fantastic.retro.input.SimpleTouchscreenInput
 import uk.me.fantastic.retro.isMobile
 import uk.me.fantastic.retro.screens.GameSession
@@ -23,6 +24,9 @@ class PimpGameFactory : AbstractGameFactory("Pimp Game", null) {
             val controller1 = App.mappedControllers.firstOrNull()
             if (controller1 != null) {
                 session.preSelectedInputDevice = GamepadInput(controller1)
+            } else {
+                session.preSelectedInputDevice = KeyboardMouseInput(session)
+                session.KBinUse = true
             }
         } else if (isMobile()) {
             session.preSelectedInputDevice = SimpleTouchscreenInput()
