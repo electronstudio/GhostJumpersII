@@ -15,6 +15,8 @@ Graphics are based on Simples Pimples art set by [Surt](https://opengameart.org/
 
 SoundFX are by [JDWasabi](https://wasabi-playground.com/about)
 
+Music by No One Can Kill Me.
+
 TODO:
 
 - [x] <strike>soundfx</strike>
@@ -24,8 +26,8 @@ TODO:
 - [ ] enemies that can climb down
 - [x] level 3
 - [x] code tidy
-- [ ] winner
-- [ ] scores
+- [x] winner
+- [x] scores
 - [ ] scrolling
-- [ ] either: allow smooth motion and bilinear filtering
-  - [ ] OR: disable option in menu when necessary
+- [x] <strike>either: allow smooth motion and bilinear filtering</strike>
+  - [x] OR: disable option in menu when necessary
