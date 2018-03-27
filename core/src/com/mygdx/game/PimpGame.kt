@@ -132,16 +132,19 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     override fun doLogic(deltaTime: Float) {
         timer += deltaTime
         if (levelFinished) {
-            if (players.any { it.input?.fire }) {
-                gameover()
-            }
+            doGameoverLogic()
         } else {
             doGameLogic()
         }
     }
 
-    private fun doGameLogic() {
+    private fun doGameoverLogic() {
+        if (timer > 1f && players.any { it.input?.fire }) {
+            gameover()
+        }
+    }
 
+    private fun doGameLogic() {
         allSprites.forEach {
             it.update()
         }
@@ -156,9 +159,7 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         checkForNewPlayerJoins()
 
         if (timeleft() <= 0) {
-            session.nextGame = null
-            levelFinished = true
-            endOfLevelMessage = "[RED]TIME OVER[]"
+            timeOver()
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.P)) {
@@ -168,6 +169,7 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
             levelComplete(null)
         }
     }
+
 
     override fun doDrawing(batch: Batch) {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
@@ -249,6 +251,14 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         else -> Pair(26, 1)
     }
 
+    private fun timeOver() {
+        session.nextGame = null
+        levelFinished = true
+        endOfLevelMessage = "[RED]TIME OVER[]"
+        timer=0f
+    }
+
+
     fun levelComplete(winner: PimpGuy?) {
         this.winner = winner?.player
         music.stop()
@@ -262,6 +272,7 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         }
         levelFinished = true
         endOfLevelMessage = "[BLUE]COMPLETE[]"
+        timer=0f
     }
 
     override fun show() {
