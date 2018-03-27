@@ -46,7 +46,10 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     val bonusSound = Gdx.audio.newSound(Gdx.files.internal("mods/PimpGame/bonus_jade.wav"))
     val spawnSound = Gdx.audio.newSound(Gdx.files.internal("mods/PimpGame/hit_jade.wav"))
     val controlsImageLayer = Texture("mods/PimpGame/controls.png")
-    val music = Gdx.audio.newMusic(Gdx.files.internal("mods/PimpGame/justin1.wav"))
+    val music = CrossPlatformMusic.create(desktopFile = "mods/PimpGame/justin1.ogg", mobileFile = "mods/PimpGame/JustinLong.ogg")
+
+
+
 
     val textures = spriteSheet.split(16, 16)
     val redFlash = Animation<Color>(0.1f, Color.BLACK, Color.RED)
@@ -68,7 +71,7 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     var endOfLevelMessage = ""
 
     init {
-        music.isLooping = true
+
         for (layer in background.layers) {
             for (obj in layer.objects) {
                 createObjectFromMap(obj)
@@ -145,6 +148,10 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     }
 
     private fun doGameLogic() {
+
+        val pitch = if (timeleft() > 30) 1.0f else 2.0f - timeleft() / 30f
+        music.setPitch(pitch)
+
         allSprites.forEach {
             it.update()
         }
@@ -256,6 +263,7 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         levelFinished = true
         endOfLevelMessage = "[RED]TIME OVER[]"
         timer=0f
+        music.stop()
     }
 
 
@@ -276,7 +284,6 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     }
 
     override fun show() {
-        music.volume = Prefs.NumPref.MUSIC_VOLUME.asVolume()
         if (Prefs.BinPref.MUSIC.isEnabled()) music.play()
     }
 
