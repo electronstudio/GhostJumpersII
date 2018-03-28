@@ -27,6 +27,8 @@ task ktlintFormat(type: JavaExec) {
 
 dependencies {
     ktlint 'com.github.shyiko:ktlint:0.15.1'
+    compile 'io.sentry:sentry:1.7.2'
+    compile 'org.slf4j:slf4j-simple:1.7.21'
   //  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
   //  compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
   //  compile "net.dermetfan.libgdx-utils:libgdx-utils:$gdxUtilsVersion"

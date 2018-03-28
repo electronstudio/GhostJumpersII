@@ -71,7 +71,6 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     var endOfLevelMessage = ""
 
     init {
-
         for (layer in background.layers) {
             for (obj in layer.objects) {
                 createObjectFromMap(obj)
