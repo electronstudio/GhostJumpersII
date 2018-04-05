@@ -71,6 +71,7 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     var endOfLevelMessage = ""
 
     init {
+        font.data.markupEnabled = true
         for (layer in background.layers) {
             for (obj in layer.objects) {
                 createObjectFromMap(obj)
@@ -180,13 +181,13 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     override fun doDrawing(batch: Batch) {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
-        batch.begin()
+
         if (levelFinished) {
             drawEndOfLevelScreen(batch)
         } else {
             drawGame(batch)
         }
-        batch.end()
+
     }
 
     private fun drawGame(batch: Batch) {
