@@ -4,9 +4,6 @@ package uk.co.electronstudio.ghostjumpers
 import android.os.Bundle
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
-import com.mygdx.game.BuildConfig
-import com.mygdx.game.PimpGameFactory
-import com.mygdx.game.R
 import uk.me.fantastic.retro.AndroidLogger
 import uk.me.fantastic.retro.SimpleApp
 import uk.me.fantastic.retro.android.AndroidCallback

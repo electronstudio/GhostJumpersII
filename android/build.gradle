@@ -20,7 +20,7 @@ android {
         exclude 'META-INF/robovm/ios/robovm.xml'
     }
     defaultConfig {
-        applicationId "com.mygdx.game"
+        applicationId "uk.co.electronstudio.ghostjumpers"
         minSdkVersion 9
         targetSdkVersion 27
         versionCode 1

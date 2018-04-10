@@ -1,4 +1,4 @@
-package com.mygdx.game
+package uk.co.electronstudio.ghostjumpers
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.tiled.TiledMap
@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Rectangle
  */
 class Ghost(
         val background: TiledMap, initX: Float, initY: Float, speed: Float,
-            val pimpGame: PimpGame, textureRegion: TextureRegion
+        val pimpGame: PimpGame, textureRegion: TextureRegion
             ) :
         RetroSprite(textureRegion) {
 

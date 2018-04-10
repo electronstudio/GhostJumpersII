@@ -1,4 +1,4 @@
-package com.mygdx.game
+package uk.co.electronstudio.ghostjumpers
 
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.g2d.TextureRegion
