@@ -46,7 +46,8 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     val bonusSound = Gdx.audio.newSound(Gdx.files.internal("mods/PimpGame/bonus_jade.wav"))
     val spawnSound = Gdx.audio.newSound(Gdx.files.internal("mods/PimpGame/hit_jade.wav"))
     val controlsImageLayer = Texture("mods/PimpGame/controls.png")
-    val music = CrossPlatformMusic.create(desktopFile = "mods/PimpGame/justin1.ogg", mobileFile = "mods/PimpGame/JustinLong.ogg")
+    val music = CrossPlatformMusic.create(desktopFile = "mods/PimpGame/justin1.ogg", androidFile =
+    "mods/PimpGame/JustinLong.ogg", iOSFile = "mods/PimpGame/fall_jade.wav")
 
 
 

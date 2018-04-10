@@ -70,17 +70,17 @@ void main()
 uniform sampler2D Texture;
 
 #if defined(CURVATURE)
-vec2 CURVATURE_DISTORTION = vec2(CURVATURE_X, CURVATURE_Y);
+
 // Barrel distortion shrinks the display area a bit, this will allow us to counteract that.
-vec2 barrelScale = 1.0 - (0.23 * CURVATURE_DISTORTION);
+
 
 vec2 Distort(vec2 coord)
 {
 	coord *= screenScale;
 	coord -= vec2(0.5);
 	float rsq = coord.x * coord.x + coord.y * coord.y;
-	coord += coord * (CURVATURE_DISTORTION * rsq);
-	coord *= barrelScale;
+	coord += coord * (vec2(CURVATURE_X, CURVATURE_Y) * rsq);
+	coord *= 1.0 - (0.23 * vec2(CURVATURE_X, CURVATURE_Y));
 	if (abs(coord.x) >= 0.5 || abs(coord.y) >= 0.5)
 		coord = vec2(-1.0);		// If out of bounds, return an invalid value.
 	else

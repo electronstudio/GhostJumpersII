@@ -7,11 +7,14 @@ import uk.me.fantastic.retro.Prefs
 
 abstract class CrossPlatformMusic {
     companion object {
-        fun create(desktopFile: String, mobileFile: String): CrossPlatformMusic {
-            if (Gdx.app.type == Application.ApplicationType.Desktop) {
+        fun create(desktopFile: String, androidFile: String, iOSFile: String): CrossPlatformMusic {
+            if (Gdx.app.type == Application.ApplicationType.Android) {
+                return LongSongPlayer(androidFile)
+            } else if (Gdx.app.type == Application.ApplicationType.iOS) {
+                return ShortSongPlayer(iOSFile)
+            }
+            else {
                 return ShortSongPlayer(desktopFile)
-            } else {
-                return LongSongPlayer(mobileFile)
             }
         }
     }
