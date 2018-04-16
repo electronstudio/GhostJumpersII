@@ -1,5 +1,4 @@
-include 'desktop', 'core', 'android'
-        //, ''ios'
+include 'desktop', 'core', 'ios'
 //include ':retrogame'
 //project(':retrogame').projectDir = new File(settingsDir, '../retrogame')
 //includeFlat 'retrogame'

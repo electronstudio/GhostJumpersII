@@ -18,4 +18,9 @@ public class IOSLogger implements RLogger {
     public void initialize() {
 
     }
+
+    @Override
+    public void error(String s) {
+        log(s);
+    }
 }

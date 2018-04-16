@@ -10,7 +10,7 @@ import uk.me.fantastic.retro.desktop.DesktopLogger;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		DesktopCallback callback = new DesktopCallback();
-		App app = new SimpleApp(callback, "Ghost Jumpers", new PimpGameFactory(), new DesktopLogger());
+		App app = new SimpleApp(callback, "Ghost Jumpers", new PimpGameFactory(), new DesktopLogger(), false);
 		new LwjglApplication(app, callback.getConfig());
 	}
 }

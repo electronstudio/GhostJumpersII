@@ -13,7 +13,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
     protected IOSApplication createApplication() {
         IOSApplicationConfiguration config = new IOSApplicationConfiguration();
 
-        SimpleApp app = new SimpleApp(new IOSCallback(), "Ghost Jumpers", new PimpGameFactory(), new IOSLogger());
+        SimpleApp app = new SimpleApp(new IOSCallback(), "Ghost Jumpers", new PimpGameFactory(), new IOSLogger(), false);
         return new IOSApplication(app, config);
     }
 

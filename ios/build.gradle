@@ -29,5 +29,9 @@ launchIOSDevice.dependsOn build
 createIPA.dependsOn build
 
 robovm {
-	archs = "thumbv7:arm64"
+    archs = "thumbv7:arm64"
+    iosSignIdentity = 'iPhone Distribution: Richard Smith (7KX3ZBY487)'
+    iosProvisioningProfile = 'Kitty Transmitty X'
+    iosSkipSigning = false
 }
+
