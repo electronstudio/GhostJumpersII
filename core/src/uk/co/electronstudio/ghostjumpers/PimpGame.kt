@@ -27,6 +27,9 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         SimpleGame(session,
                 320f, 240f, font, font) {
 
+    override val MAX_FPS=250f
+    override val MIN_FPS=20f
+
     companion object {
         private val font = BitmapFont(Gdx.files.internal("mods/PimpGame/c64_low3_black.fnt")) // for drawing text
         val maps = listOf<String>(
@@ -133,8 +136,7 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         exits.add(obj.rectangle)
     }
 
-    override fun doLogic(deltaTime: Float) {
-        val delta = Gdx.graphics.rawDeltaTime
+    override fun doLogic(delta: Float) {
         timer += delta
         if (levelFinished) {
             doGameoverLogic()
@@ -288,10 +290,13 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
 
     override fun show() {
         if (Prefs.BinPref.MUSIC.isEnabled()) music.play()
+        App.app.manualGC?.disable()
     }
 
     override fun hide() {
         music.stop()
+        App.app.manualGC?.enable()
+        App.app.manualGC?.doGC()
     }
 
     override fun dispose() {
