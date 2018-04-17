@@ -199,7 +199,7 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     }
 
     private fun drawGame(batch: Batch) {
-        Prefs.BinPref.BILINEAR.filter(bgTexture)
+
         batch.draw(bgTexture, 0f, 0f)
         drawSprites(batch)
         drawText(batch)
