@@ -1,8 +1,8 @@
 package uk.co.electronstudio.ghostjumpers;
 
-import uk.me.fantastic.retro.RLogger;
+import uk.me.fantastic.retro.Logger;
 
-public class IOSLogger implements RLogger {
+public class IOSLogger implements Logger {
     @Override
     public void log(String s) {
         System.out.println(s);
