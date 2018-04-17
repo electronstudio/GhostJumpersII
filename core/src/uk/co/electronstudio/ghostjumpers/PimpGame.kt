@@ -151,7 +151,10 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         }
     }
 
+    val fpsLimiter =  FPSLimiter(40f)
+
     private fun doGameLogic(delta: Float) {
+       // fpsLimiter.delay() //FIXME does not work
 
 
         val pitch = if (timeleft() > 30) 1.0f else 2.0f - timeleft() / 30f
