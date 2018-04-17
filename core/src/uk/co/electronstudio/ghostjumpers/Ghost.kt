@@ -23,10 +23,10 @@ class Ghost(
         if (speed < 0) flipSprite()
     }
 
-    override fun update() {
+    override fun update(delta: Float) {
         collisionTest(spriteCollisionShape, background)
         checkBackgroundColisions()
-        doSimplePhysics()
+        doSimplePhysics(delta)
         checkBounds()
     }
 

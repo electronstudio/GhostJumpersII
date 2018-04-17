@@ -5,6 +5,7 @@ import org.robovm.apple.uikit.UIApplication;
 
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
+import org.robovm.rt.GC;
 import uk.me.fantastic.retro.SimpleApp;
 ;
 
@@ -13,6 +14,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
     protected IOSApplication createApplication() {
         IOSApplicationConfiguration config = new IOSApplicationConfiguration();
 
+        GC.collectALittle();
         SimpleApp app = new SimpleApp(new IOSCallback(), "Ghost Jumpers", new PimpGameFactory(), new IOSLogger(), false);
         return new IOSApplication(app, config);
     }

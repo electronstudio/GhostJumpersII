@@ -134,11 +134,12 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     }
 
     override fun doLogic(deltaTime: Float) {
-        timer += deltaTime
+        val delta = Gdx.graphics.rawDeltaTime
+        timer += delta
         if (levelFinished) {
             doGameoverLogic()
         } else {
-            doGameLogic()
+            doGameLogic(delta)
         }
     }
 
@@ -148,13 +149,14 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         }
     }
 
-    private fun doGameLogic() {
+    private fun doGameLogic(delta: Float) {
+
 
         val pitch = if (timeleft() > 30) 1.0f else 2.0f - timeleft() / 30f
         music.setPitch(pitch)
 
         allSprites.forEach {
-            it.update()
+            it.update(delta)
         }
 
         val deadSprites: List<RetroSprite> = allSprites.filter { it.dead }
@@ -162,7 +164,7 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
             allSprites.remove(it)
         } // JDK 8 / Android 7: allSprites.removeIf { it.dead }
 
-        spawners.forEach { it.update(Gdx.graphics.deltaTime) }
+        spawners.forEach { it.update(delta) }
 
         checkForNewPlayerJoins()
 

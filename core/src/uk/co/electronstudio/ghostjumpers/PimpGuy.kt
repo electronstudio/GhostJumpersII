@@ -40,17 +40,17 @@ class PimpGuy(
     fun isStunned() = stunCounter > 0f
 
     /* called every frame */
-    override fun update() {
-        doAnimation()
+    override fun update(delta: Float) {
+        doAnimation(delta)
         animation = defaultAnim
 
         if (isStunned()) {
-            doWeAreStunned()
+            doWeAreStunned(delta)
         } else {
-            doWeAreNotStunned()
+            doWeAreNotStunned(delta)
         }
 
-        doSimplePhysics()
+        doSimplePhysics(delta)
         checkOutOfBounds()
         checkPushes()
     }
@@ -69,32 +69,32 @@ class PimpGuy(
         if (y < 16f) y = 16f
     }
 
-    private fun doWeAreStunned() {
+    private fun doWeAreStunned(delta: Float) {
         animation = dieAnim
         xVel = 0f
-        doFalling()
-        stunCounter += yVel * Gdx.graphics.deltaTime
+        doFalling(delta)
+        stunCounter += yVel * delta
     }
 
-    private fun doFalling() {
-        yVel -= GRAVITY * Gdx.graphics.deltaTime
-        fallTimer += Gdx.graphics.deltaTime
+    private fun doFalling(delta: Float) {
+        yVel -= GRAVITY * delta
+        fallTimer += delta
     }
 
     private fun weAreOn(s: String) = backgroundCollisions.contains(s)
 
-    private fun doWeAreNotStunned() {
-        checkBackgroundColisions()
+    private fun doWeAreNotStunned(delta: Float) {
+        checkBackgroundColisions(delta)
         checkEnemyColisions()
         checkExitColisions()
     }
 
-    private fun checkBackgroundColisions() {
+    private fun checkBackgroundColisions(delta: Float) {
         collisionTest(collisionShapeFeet, background)
         if (weAreOn("ladder")) {
             xVel = 0f
             yVel = 0f
-            doClimbingDown()
+            doClimbingDown(delta)
             animation = climbAnim
         }
         if (weAreOn("platform")) {
@@ -104,11 +104,11 @@ class PimpGuy(
             fallTimer = 0f
         }
         if (weAreOn("ladder") || weAreOn("platform")) {
-            doClimbingUp()
+            doClimbingUp(delta)
         }
         if (!weAreOn("ladder") && !weAreOn("platform")) {
             if (fallTimer < 0.1f) doJumping()
-            doFalling()
+            doFalling(delta)
             animation = jumpAnimation
         }
     }
@@ -155,16 +155,16 @@ class PimpGuy(
         sound.play(Prefs.NumPref.FX_VOLUME.asVolume(), (player.id.toFloat() * 0.3f + 0.5f), 0f)
     }
 
-    private fun doClimbingUp() {
+    private fun doClimbingUp(delta: Float) {
         if (input.leftStick.y < -0.3f || input.rightStick.y < -0.3f) {
-            y = y + 60f * Gdx.graphics.deltaTime
+            y = y + 60f * delta
             animation = climbAnim
         }
     }
 
-    private fun doClimbingDown() {
+    private fun doClimbingDown(delta: Float) {
         if (input.leftStick.y > 0.3f || input.rightStick.y > 0.3f) {
-            y = y - 60f * Gdx.graphics.deltaTime
+            y = y - 60f * delta
             animation = climbAnim
         }
     }

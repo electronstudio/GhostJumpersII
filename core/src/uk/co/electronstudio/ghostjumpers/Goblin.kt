@@ -27,8 +27,8 @@ class Goblin(
         xVel = speed
     }
 
-    override fun update() {
-        doAnimation()
+    override fun update(delta: Float) {
+        doAnimation(delta)
 
         if (x < leftLimit) {
             unFlipSprite()
@@ -41,6 +41,6 @@ class Goblin(
             xVel = xVel * -1
         }
         flip = xVel < 0
-        x += xVel * Gdx.graphics.deltaTime
+        x += xVel * delta
     }
 }

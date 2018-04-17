@@ -36,15 +36,15 @@ abstract class RetroSprite(textureRegion: TextureRegion) : Sprite
     /*
      * We will call this every frame
      */
-    abstract fun update()
+    abstract fun update(delta: Float)
 
     override fun draw(batch: Batch?) {
         super.draw(batch)
     }
 
     /* Some sprites dont animate so dont need to call this */
-    fun doAnimation() {
-        timer += Gdx.graphics.deltaTime
+    fun doAnimation(delta: Float) {
+        timer += delta
         animation?.let {
             setRegion(it.getKeyFrame(timer, true))
             if (flip) flipSprite() else unFlipSprite()
@@ -105,9 +105,9 @@ abstract class RetroSprite(textureRegion: TextureRegion) : Sprite
         }
     }
 
-    fun doSimplePhysics() {
-        x += xVel * Gdx.graphics.deltaTime
-        y += yVel * Gdx.graphics.deltaTime
+    fun doSimplePhysics(delta: Float) {
+        x += xVel * delta
+        y += yVel * delta
     }
 
     fun flipSprite() {
