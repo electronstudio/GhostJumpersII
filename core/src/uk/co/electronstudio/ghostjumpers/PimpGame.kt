@@ -20,7 +20,7 @@ import uk.me.fantastic.retro.games.Player
 import uk.me.fantastic.retro.games.SimpleGame
 import uk.me.fantastic.retro.isMobile
 import uk.me.fantastic.retro.screens.GameSession
-import uk.me.fantastic.retro.unigame.Background
+import uk.me.fantastic.retro.unigame.Level
 
 /* The God class */
 class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
@@ -41,7 +41,7 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
 
     val background = TmxMapLoader().load(maps[level])!!
 
-    val bgTexture = Background.renderTileMapToTexture(background)
+    val bgTexture = Level.renderTileMapToTexture(background)
 
     val spriteSheet = TextureRegion(Texture("mods/PimpGame/simples_pimplest.png"))
     val jumpSound = Gdx.audio.newSound(Gdx.files.internal("mods/PimpGame/jump_jade.wav"))

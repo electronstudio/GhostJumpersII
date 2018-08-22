@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Rectangle
+import com.sun.media.sound.EmergencySoundbank.toFloat
 import uk.me.fantastic.retro.Prefs
 import uk.me.fantastic.retro.games.Player
 
@@ -152,7 +153,7 @@ class PimpGuy(
 
     private fun playSound(sound: Sound) {
         sound.stop()
-        sound.play(Prefs.NumPref.FX_VOLUME.asVolume(), (player.id.toFloat() * 0.3f + 0.5f), 0f)
+        sound.play(Prefs.NumPref.FX_VOLUME.asVolume(), (pimpGame.session.players.indexOf(player) * 0.3f + 0.5f), 0f)
     }
 
     private fun doClimbingUp(delta: Float) {

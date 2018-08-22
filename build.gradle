@@ -118,5 +118,13 @@ project(":core") {
 //        }
 
     }
+
+    jar {
+        manifest {
+            attributes("RetroWar-Version": "0.14",
+                    "Factory-Class": "uk.co.electronstudio.ghostjumpers.PimpGameFactory"
+            )
+        }
+    }
 }
 
