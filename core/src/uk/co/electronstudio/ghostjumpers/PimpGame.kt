@@ -3,7 +3,6 @@ package uk.co.electronstudio.ghostjumpers
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.Batch
@@ -23,12 +22,12 @@ import uk.me.fantastic.retro.screens.GameSession
 import uk.me.fantastic.retro.unigame.Level
 
 /* The God class */
-class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
+class PimpGame(session: GameSession, val difficulty: Int, val level: Int, val howManyLevelsToPlay: Int) :
         SimpleGame(session,
                 320f, 240f, font, font) {
 
-    override val MAX_FPS=250f
-    override val MIN_FPS=20f
+    override val MAX_FPS = 250f
+    override val MIN_FPS = 20f
 
     companion object {
         private val font = BitmapFont(Gdx.files.internal("mods/PimpGame/c64_low3_black.fnt")) // for drawing text
@@ -51,8 +50,6 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
     val controlsImageLayer = Texture("mods/PimpGame/controls.png")
     val music = CrossPlatformMusic.create(desktopFile = "mods/PimpGame/justin1.ogg", androidFile =
     "mods/PimpGame/JustinLong.ogg", iOSFile = "mods/PimpGame/justin1.wav")
-
-
 
 
     val textures = spriteSheet.split(16, 16)
@@ -151,10 +148,10 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         }
     }
 
-    val fpsLimiter =  FPSLimiter(40f)
+    val fpsLimiter = FPSLimiter(40f)
 
     private fun doGameLogic(delta: Float) {
-       // fpsLimiter.delay() //FIXME does not work
+        // fpsLimiter.delay() //FIXME does not work
 
 
         val pitch = if (timeleft() > 30) 1.0f else 2.0f - timeleft() / 30f
@@ -187,9 +184,6 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
 
 
     override fun doDrawing(batch: Batch) {
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
-
         if (levelFinished) {
             drawEndOfLevelScreen(batch)
         } else {
@@ -270,7 +264,7 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         session.nextGame = null
         levelFinished = true
         endOfLevelMessage = "[RED]TIME OVER[]"
-        timer=0f
+        timer = 0f
         music.stop()
     }
 
@@ -281,14 +275,17 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int) :
         if (winner != null) {
             winner.player.score += timeleft() * difficulty
         }
-        if (level == maps.lastIndex) {
-            session.nextGame = PimpGame(session, difficulty + 1, 0)
+        if (howManyLevelsToPlay == 1) {
+            session.nextGame = null
+        } else if (level == maps.lastIndex) {
+            session.nextGame = PimpGame(session, difficulty + 1, 0, howManyLevelsToPlay - 1)
+
         } else {
-            session.nextGame = PimpGame(session, difficulty, level + 1)
+            session.nextGame = PimpGame(session, difficulty, level + 1, howManyLevelsToPlay - 1)
         }
         levelFinished = true
         endOfLevelMessage = "[BLUE]COMPLETE[]"
-        timer=0f
+        timer = 0f
     }
 
     override fun show() {
