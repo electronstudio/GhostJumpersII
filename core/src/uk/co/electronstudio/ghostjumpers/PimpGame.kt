@@ -30,11 +30,11 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int, val ho
     override val MIN_FPS = 20f
 
     companion object {
-        private val font = BitmapFont(Gdx.files.internal("mods/PimpGame/c64_low3_black.fnt")) // for drawing text
+        private val font = BitmapFont(Gdx.files.internal("addons/GhostJumpers/c64_low3_black.fnt")) // for drawing text
         val maps = listOf<String>(
-                "mods/PimpGame/level1.tmx",
-                "mods/PimpGame/level2.tmx",
-                "mods/PimpGame/level3.tmx"
+                "addons/GhostJumpers/level1.tmx",
+                "addons/GhostJumpers/level2.tmx",
+                "addons/GhostJumpers/level3.tmx"
         )
     }
 
@@ -42,14 +42,14 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int, val ho
 
     val bgTexture = Level.renderTileMapToTexture(background)
 
-    val spriteSheet = TextureRegion(Texture("mods/PimpGame/simples_pimplest.png"))
-    val jumpSound = Gdx.audio.newSound(Gdx.files.internal("mods/PimpGame/jump_jade.wav"))
-    val stunSound = Gdx.audio.newSound(Gdx.files.internal("mods/PimpGame/fall_jade.wav"))
-    val bonusSound = Gdx.audio.newSound(Gdx.files.internal("mods/PimpGame/bonus_jade.wav"))
-    val spawnSound = Gdx.audio.newSound(Gdx.files.internal("mods/PimpGame/hit_jade.wav"))
-    val controlsImageLayer = Texture("mods/PimpGame/controls.png")
-    val music = CrossPlatformMusic.create(desktopFile = "mods/PimpGame/justin1.ogg", androidFile =
-    "mods/PimpGame/JustinLong.ogg", iOSFile = "mods/PimpGame/justin1.wav")
+    val spriteSheet = TextureRegion(Texture("addons/GhostJumpers/simples_pimplest.png"))
+    val jumpSound = Gdx.audio.newSound(Gdx.files.internal("addons/GhostJumpers/jump_jade.wav"))
+    val stunSound = Gdx.audio.newSound(Gdx.files.internal("addons/GhostJumpers/fall_jade.wav"))
+    val bonusSound = Gdx.audio.newSound(Gdx.files.internal("addons/GhostJumpers/bonus_jade.wav"))
+    val spawnSound = Gdx.audio.newSound(Gdx.files.internal("addons/GhostJumpers/hit_jade.wav"))
+    val controlsImageLayer = Texture("addons/GhostJumpers/controls.png")
+    val music = CrossPlatformMusic.create(desktopFile = "addons/GhostJumpers/justin1.ogg", androidFile =
+    "addons/GhostJumpers/JustinLong.ogg", iOSFile = "addons/GhostJumpers/justin1.wav")
 
 
     val textures = spriteSheet.split(16, 16)
@@ -133,17 +133,17 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int, val ho
         exits.add(obj.rectangle)
     }
 
-    override fun doLogic(delta: Float) {
-        timer += delta
+    override fun doLogic(deltaTime: Float) {
+        timer += deltaTime
         if (levelFinished) {
             doGameoverLogic()
         } else {
-            doGameLogic(delta)
+            doGameLogic(deltaTime)
         }
     }
 
     private fun doGameoverLogic() {
-        if (timer > 1f && players.any { it.input?.fire }) {
+        if (timer > 1f && players.any { it.input.fire }) {
             gameover()
         }
     }

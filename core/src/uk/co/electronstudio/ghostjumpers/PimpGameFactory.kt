@@ -18,10 +18,13 @@ import uk.me.fantastic.retro.screens.GameSession
  */
 class PimpGameFactory : AbstractGameFactory("Ghost Jumpers", null) {
 
-    override val image by lazy { Texture(Gdx.files.internal("mods/PimpGame/pimpenemy.png")) }
+    override val image by lazy { Texture(Gdx.files.internal("addons/GhostJumpers/pimpenemy.png")) }
 
     var howManyLevelsToPlay = -1
     var difficultyLevel = 1
+
+    override val description = "A platform game. Avoid the ghosts and get to the exit as quickly as you can.  May be " +
+            "played single player!"
 
     override val options = listOf(
             MultiChoiceMenuItem(
@@ -55,8 +58,7 @@ class PimpGameFactory : AbstractGameFactory("Ghost Jumpers", null) {
         return PimpGame(session, difficultyLevel, 0, howManyLevelsToPlay)
     }
 
-    override fun createWithTournamentSettings(session: GameSession): Game {
-
+    override fun createWithDefaultSettings(session: GameSession): Game {
         return PimpGame(session, difficultyLevel, 0, 3)
     }
 }

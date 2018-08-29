@@ -23,8 +23,7 @@ class PimpGuy(
     private val GRAVITY = 200f
     private val background: TiledMap = pimpGame.background
     private val textures = pimpGame.textures
-    private val input = player.input!! // if player has no input device we are fucked so just crash
-    // TODO work out why input is nullable and if it can ever really be null
+    private val input = player.input
 
     private val defaultAnim = Animation(0.1f, pimpGame.textures[spriteSheetOffsetY][spriteSheetOffsetX])
     private val runningAnim = Animation(0.1f, textures[spriteSheetOffsetY][spriteSheetOffsetX + 1], textures[spriteSheetOffsetY][spriteSheetOffsetX + 2])
