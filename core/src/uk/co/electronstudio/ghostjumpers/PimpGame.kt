@@ -14,12 +14,12 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Align
 import uk.me.fantastic.retro.App
+import uk.me.fantastic.retro.Player
 import uk.me.fantastic.retro.Prefs
-import uk.me.fantastic.retro.games.Player
-import uk.me.fantastic.retro.games.SimpleGame
+import uk.me.fantastic.retro.SimpleGame
 import uk.me.fantastic.retro.isMobile
+import uk.me.fantastic.retro.renderTileMapToTexture
 import uk.me.fantastic.retro.screens.GameSession
-import uk.me.fantastic.retro.unigame.Level
 
 /* The God class */
 class PimpGame(session: GameSession, val difficulty: Int, val level: Int, val howManyLevelsToPlay: Int) :
@@ -40,7 +40,7 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int, val ho
 
     val background = TmxMapLoader().load(maps[level])!!
 
-    val bgTexture = Level.renderTileMapToTexture(background)
+    val bgTexture = renderTileMapToTexture(background)
 
     val spriteSheet = TextureRegion(Texture("addons/GhostJumpers/simples_pimplest.png"))
     val jumpSound = Gdx.audio.newSound(Gdx.files.internal("addons/GhostJumpers/jump_jade.wav"))
@@ -175,7 +175,7 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int, val ho
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.P)) {
-            println(App.Companion.testSandbox()) // should crash if sandbox is working
+            println(App.app.testSandbox()) // should crash if sandbox is working
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
             levelComplete(null)
@@ -197,7 +197,7 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int, val ho
         batch.draw(bgTexture, 0f, 0f)
         drawSprites(batch)
         drawText(batch)
-        if (isMobile() && noFingersTouchingScreen()) {
+        if (isMobile && noFingersTouchingScreen()) {
             batch.draw(controlsImageLayer, 0f, 0f)
         }
     }
