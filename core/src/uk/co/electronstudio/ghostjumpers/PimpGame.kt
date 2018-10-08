@@ -22,34 +22,27 @@ import uk.me.fantastic.retro.renderTileMapToTexture
 import uk.me.fantastic.retro.screens.GameSession
 
 /* The God class */
-class PimpGame(session: GameSession, val difficulty: Int, val level: Int, val howManyLevelsToPlay: Int) :
+class PimpGame(session: GameSession, val difficulty: Int, val level: Int, val howManyLevelsToPlay: Int, val 
+pathPrefix: String, val factory: PimpGameFactory) :
         SimpleGame(session,
-                320f, 240f, font, font) {
+                320f, 240f, factory.font) {
 
     override val MAX_FPS = 250f
     override val MIN_FPS = 20f
 
-    companion object {
-        private val font = BitmapFont(Gdx.files.internal("addons/GhostJumpers/c64_low3_black.fnt")) // for drawing text
-        val maps = listOf<String>(
-                "addons/GhostJumpers/level1.tmx",
-                "addons/GhostJumpers/level2.tmx",
-                "addons/GhostJumpers/level3.tmx"
-        )
-    }
 
-    val background = TmxMapLoader().load(maps[level])!!
+    val background = TmxMapLoader().load(factory.maps[level])!!
 
     val bgTexture = renderTileMapToTexture(background)
 
-    val spriteSheet = TextureRegion(Texture("addons/GhostJumpers/simples_pimplest.png"))
-    val jumpSound = Gdx.audio.newSound(Gdx.files.internal("addons/GhostJumpers/jump_jade.wav"))
-    val stunSound = Gdx.audio.newSound(Gdx.files.internal("addons/GhostJumpers/fall_jade.wav"))
-    val bonusSound = Gdx.audio.newSound(Gdx.files.internal("addons/GhostJumpers/bonus_jade.wav"))
-    val spawnSound = Gdx.audio.newSound(Gdx.files.internal("addons/GhostJumpers/hit_jade.wav"))
-    val controlsImageLayer = Texture("addons/GhostJumpers/controls.png")
-    val music = CrossPlatformMusic.create(desktopFile = "addons/GhostJumpers/justin1.ogg", androidFile =
-    "addons/GhostJumpers/JustinLong.ogg", iOSFile = "addons/GhostJumpers/justin1.wav")
+    val spriteSheet = TextureRegion(Texture(pathPrefix+"simples_pimplest.png"))
+    val jumpSound = Gdx.audio.newSound(Gdx.files.internal(pathPrefix+"jump_jade.wav"))
+    val stunSound = Gdx.audio.newSound(Gdx.files.internal(pathPrefix+"fall_jade.wav"))
+    val bonusSound = Gdx.audio.newSound(Gdx.files.internal(pathPrefix+"bonus_jade.wav"))
+    val spawnSound = Gdx.audio.newSound(Gdx.files.internal(pathPrefix+"hit_jade.wav"))
+    val controlsImageLayer = Texture(pathPrefix+"controls.png")
+    val music = CrossPlatformMusic.create(desktopFile = pathPrefix+"justin1.ogg", androidFile =
+    pathPrefix+"JustinLong.ogg", iOSFile = pathPrefix+"justin1.wav")
 
 
     val textures = spriteSheet.split(16, 16)
@@ -64,7 +57,6 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int, val ho
     val entry = Rectangle()
     val scoreDisplay = players.sumBy { it.score } //not dynamic, taken from last level
 
-    var noOfPlayersInGameAlready = 0
     var timer = 0f
 
     var levelFinished = false
@@ -168,8 +160,6 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int, val ho
 
         spawners.forEach { it.update(delta) }
 
-        checkForNewPlayerJoins()
-
         if (timeleft() <= 0) {
             timeOver()
         }
@@ -212,7 +202,7 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int, val ho
 
     private fun noFingersTouchingScreen(): Boolean = !Gdx.input.isTouched()
 
-    private fun friendlyLevelNumber() = (difficulty - 1) * maps.size + level + 1
+    private fun friendlyLevelNumber() = (difficulty - 1) * factory.maps.size + level + 1
 
     fun drawSprites(batch: Batch) {
         allSprites.forEach {
@@ -237,18 +227,18 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int, val ho
         return (timeLimit - timer).toInt()
     }
 
-    private fun checkForNewPlayerJoins() {
-        for (i in noOfPlayersInGameAlready until players.size) { // loop only when there is a new player(s) joined
-            val xy: Pair<Int, Int> = getCoordsOfSpriteInSheet(i)
+    override fun playerJoined(player: Player) {
 
-            val pimp = PimpGuy(players[i], this, xy.first, xy.second)
-            pimp.x = entry.x
-            pimp.y = entry.y
+        val xy: Pair<Int, Int> = getCoordsOfSpriteInSheet(players.lastIndex)
 
-            allSprites.add(pimp)
-            noOfPlayersInGameAlready++
-        }
+        val pimp = PimpGuy(player, this, xy.first, xy.second)
+        pimp.x = entry.x
+        pimp.y = entry.y
+
+        allSprites.add(pimp)
     }
+
+
 
     private fun getCoordsOfSpriteInSheet(player: Int) = when (player) {
         0 -> Pair(26, 1)// different players get different texturegions within the spritesheet
@@ -277,11 +267,11 @@ class PimpGame(session: GameSession, val difficulty: Int, val level: Int, val ho
         }
         if (howManyLevelsToPlay == 1) {
             session.nextGame = null
-        } else if (level == maps.lastIndex) {
-            session.nextGame = PimpGame(session, difficulty + 1, 0, howManyLevelsToPlay - 1)
+        } else if (level == factory.maps.lastIndex) {
+            session.nextGame = PimpGame(session, difficulty + 1, 0, howManyLevelsToPlay - 1, pathPrefix, factory)
 
         } else {
-            session.nextGame = PimpGame(session, difficulty, level + 1, howManyLevelsToPlay - 1)
+            session.nextGame = PimpGame(session, difficulty, level + 1, howManyLevelsToPlay - 1, pathPrefix, factory)
         }
         levelFinished = true
         endOfLevelMessage = "[BLUE]COMPLETE[]"

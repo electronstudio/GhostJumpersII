@@ -11,7 +11,8 @@ import uk.me.fantastic.retro.utils.SimpleLogger;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		DesktopCallback callback = new DesktopCallback();
-		App app = new SimpleApp(callback, "Ghost Jumpers", new PimpGameFactory(), new SimpleLogger(), null, true);
+		App app = new SimpleApp(callback, "Ghost Jumpers", PimpGameFactory.class, new SimpleLogger(), null, false,
+				false);
 		new LwjglApplication(app, callback.getConfig());
 	}
 }
