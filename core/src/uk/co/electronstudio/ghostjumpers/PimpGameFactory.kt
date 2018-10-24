@@ -19,7 +19,7 @@ class PimpGameFactory(pathPrefix: String) : AbstractGameFactory("Ghost Jumpers",
     override val image by lazy { Texture(Gdx.files.internal("addons/GhostJumpers/pimpenemy.png")) }
 
 
-    val font = BitmapFont(Gdx.files.internal(pathPrefix+"c64_low3_black.fnt")) // for drawing text
+    val font = BitmapFont(Gdx.files.internal(pathPrefix+"english.fnt")) // for drawing text
     val maps = listOf<String>(
             pathPrefix+"level1.tmx",
             pathPrefix+"level2.tmx",
