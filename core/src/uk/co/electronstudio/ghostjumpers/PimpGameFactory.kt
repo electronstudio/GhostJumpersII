@@ -4,12 +4,12 @@ import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
-import uk.me.fantastic.retro.AbstractGameFactory
-import uk.me.fantastic.retro.App
-import uk.me.fantastic.retro.Game
-import uk.me.fantastic.retro.isMobile
-import uk.me.fantastic.retro.menu.MultiChoiceMenuItem
-import uk.me.fantastic.retro.screens.GameSession
+import uk.co.electronstudio.retrowar.AbstractGameFactory
+import uk.co.electronstudio.retrowar.App
+import uk.co.electronstudio.retrowar.Game
+import uk.co.electronstudio.retrowar.isMobile
+import uk.co.electronstudio.retrowar.menu.MultiChoiceMenuItem
+import uk.co.electronstudio.retrowar.screens.GameSession
 
 /*
  * Used by RetroWar to create our main class

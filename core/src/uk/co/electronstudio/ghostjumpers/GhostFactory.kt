@@ -3,7 +3,7 @@ package uk.co.electronstudio.ghostjumpers
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.MathUtils
-import uk.me.fantastic.retro.Prefs
+import uk.co.electronstudio.retrowar.Prefs
 
 /*
  * A spawner for Ghosts. Spits them out at random intervals

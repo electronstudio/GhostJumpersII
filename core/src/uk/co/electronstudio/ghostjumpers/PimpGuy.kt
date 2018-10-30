@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Rectangle
 import com.sun.media.sound.EmergencySoundbank.toFloat
-import uk.me.fantastic.retro.Player
-import uk.me.fantastic.retro.Prefs
+import uk.co.electronstudio.retrowar.Player
+import uk.co.electronstudio.retrowar.Prefs
 
 
 /*

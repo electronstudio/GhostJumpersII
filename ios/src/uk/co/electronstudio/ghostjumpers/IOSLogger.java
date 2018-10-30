@@ -1,6 +1,6 @@
 package uk.co.electronstudio.ghostjumpers;
 
-import uk.me.fantastic.retro.Logger;
+import uk.co.electronstudio.retrowar.Logger;
 
 public class IOSLogger implements Logger {
     @Override

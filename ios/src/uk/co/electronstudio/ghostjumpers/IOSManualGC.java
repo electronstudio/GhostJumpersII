@@ -1,7 +1,7 @@
 package uk.co.electronstudio.ghostjumpers;
 
 import org.robovm.rt.GC;
-import uk.me.fantastic.retro.ManualGC;
+import uk.co.electronstudio.retrowar.ManualGC;
 
 public class IOSManualGC implements ManualGC {
     @Override

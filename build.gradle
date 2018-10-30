@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlinVersion = '1.2.61'
+    ext.kotlinVersion = '1.2.71'
     repositories {
         mavenCentral()
         mavenLocal()
@@ -42,13 +42,11 @@ allprojects {
         maven { url "http://clojars.org/repo/"}
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
-    }
-
-    repositories {
+        maven { url  "https://dl.bintray.com/electronstudio/retrowar/" }
         flatDir {
             dirs '../libs'
- //           dirs '../../retrogame/core/build/libs'
-  //          dirs '../../retrogame/desktop/build/libs'
+            //           dirs '../../retrogame/core/build/libs'
+            //          dirs '../../retrogame/desktop/build/libs'
         }
     }
 }
@@ -95,8 +93,8 @@ project(":core") {
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        //compile fileTree('../../retrogame/core/build/libs')
-        compile name: 'retrowar-common', version: '+'
+        //compile name: 'retrowar-common', version: '+'
+        compile "uk.co.electronstudio.retrowar:retrowar-common:0.15.+"
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
         compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
         compile "net.onedaybeard.artemis:artemis-odb:2.1.0"
@@ -105,7 +103,7 @@ project(":core") {
 
     jar {
         manifest {
-            attributes("RetroWar-Version": "0.14",
+            attributes("RetroWar-Version": "0.15",
                     "Factory-Class": "uk.co.electronstudio.ghostjumpers.PimpGameFactory"
             )
         }

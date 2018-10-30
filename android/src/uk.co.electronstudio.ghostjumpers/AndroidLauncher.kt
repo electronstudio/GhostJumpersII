@@ -4,8 +4,8 @@ package uk.co.electronstudio.ghostjumpers
 import android.os.Bundle
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
-import uk.me.fantastic.retro.AndroidLogger
-import uk.me.fantastic.retro.SimpleApp
+import uk.co.electronstudio.retrowar.AndroidLogger
+import uk.co.electronstudio.retrowar.SimpleApp
 
 
 class Launcher : AndroidApplication() {

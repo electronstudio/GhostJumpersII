@@ -13,13 +13,13 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Align
-import uk.me.fantastic.retro.App
-import uk.me.fantastic.retro.Player
-import uk.me.fantastic.retro.Prefs
-import uk.me.fantastic.retro.SimpleGame
-import uk.me.fantastic.retro.isMobile
-import uk.me.fantastic.retro.renderTileMapToTexture
-import uk.me.fantastic.retro.screens.GameSession
+import uk.co.electronstudio.retrowar.App
+import uk.co.electronstudio.retrowar.Player
+import uk.co.electronstudio.retrowar.Prefs
+import uk.co.electronstudio.retrowar.SimpleGame
+import uk.co.electronstudio.retrowar.isMobile
+import uk.co.electronstudio.retrowar.renderTileMapToTexture
+import uk.co.electronstudio.retrowar.screens.GameSession
 
 /* The God class */
 class PimpGame(session: GameSession, val difficulty: Int, val level: Int, val howManyLevelsToPlay: Int, val 
