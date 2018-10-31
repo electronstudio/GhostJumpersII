@@ -229,7 +229,7 @@ pathPrefix: String, val factory: PimpGameFactory) :
 
     override fun playerJoined(player: Player) {
 
-        val xy: Pair<Int, Int> = getCoordsOfSpriteInSheet(players.lastIndex)
+        val xy: Pair<Int, Int> = getCoordsOfSpriteInSheet(players.indexOf(player))
 
         val pimp = PimpGuy(player, this, xy.first, xy.second)
         pimp.x = entry.x
@@ -242,12 +242,12 @@ pathPrefix: String, val factory: PimpGameFactory) :
 
     private fun getCoordsOfSpriteInSheet(player: Int) = when (player) {
         0 -> Pair(26, 1)// different players get different texturegions within the spritesheet
-        1 -> Pair(32, 1)// these are the offsets in the sheet
-        2 -> Pair(38, 1)
-        3 -> Pair(26, 2)
-        4 -> Pair(32, 2)
-        5 -> Pair(38, 2)
-        else -> Pair(26, 1)
+        1 -> Pair(26, 3)// these are the offsets in the sheet
+        2 -> Pair(38, 2)
+        3 -> Pair(26, 4)
+        4 -> Pair(26, 6)
+        5 -> Pair(32, 6)
+        else -> Pair(38, 6)
     }
 
     private fun timeOver() {
