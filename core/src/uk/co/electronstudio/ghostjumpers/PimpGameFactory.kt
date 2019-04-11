@@ -16,7 +16,7 @@ import uk.co.electronstudio.retrowar.screens.GameSession
  */
 class PimpGameFactory(pathPrefix: String) : AbstractGameFactory("Ghost Jumpers", null, pathPrefix) {
 
-    override val image by lazy { Texture(Gdx.files.internal("addons/GhostJumpers/pimpenemy.png")) }
+    override val image by lazy { Texture(Gdx.files.internal("$pathPrefix/pimpenemy.png")) }
 
 
     val font = BitmapFont(Gdx.files.internal(pathPrefix+"english.fnt")) // for drawing text

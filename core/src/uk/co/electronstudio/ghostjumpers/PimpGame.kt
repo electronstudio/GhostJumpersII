@@ -20,6 +20,7 @@ import uk.co.electronstudio.retrowar.SimpleGame
 import uk.co.electronstudio.retrowar.isMobile
 import uk.co.electronstudio.retrowar.renderTileMapToTexture
 import uk.co.electronstudio.retrowar.screens.GameSession
+import java.util.ArrayList
 
 /* The God class */
 class PimpGame(session: GameSession, val difficulty: Int, val level: Int, val howManyLevelsToPlay: Int, val 
@@ -243,10 +244,12 @@ pathPrefix: String, val factory: PimpGameFactory) :
     private fun getCoordsOfSpriteInSheet(player: Int) = when (player) {
         0 -> Pair(26, 1)// different players get different texturegions within the spritesheet
         1 -> Pair(26, 3)// these are the offsets in the sheet
-        2 -> Pair(38, 2)
         3 -> Pair(26, 4)
         4 -> Pair(26, 6)
-        5 -> Pair(32, 6)
+        6 -> Pair(32, 1)
+        5 -> Pair(32, 3)
+        7 -> Pair(32, 6)
+        2 -> Pair(38, 2)
         else -> Pair(38, 6)
     }
 
