@@ -14,6 +14,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Align
 import uk.co.electronstudio.retrowar.App
+import uk.co.electronstudio.retrowar.CrossPlatformMusic
 import uk.co.electronstudio.retrowar.Player
 import uk.co.electronstudio.retrowar.Prefs
 import uk.co.electronstudio.retrowar.SimpleGame

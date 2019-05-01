@@ -1,6 +1,6 @@
 package uk.co.electronstudio.ghostjumpers
 
-import com.badlogic.gdx.Application
+
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
@@ -49,11 +49,14 @@ class PimpGameFactory(pathPrefix: String) : AbstractGameFactory("Ghost Jumpers",
 
 
     override fun create(session: GameSession): Game {
-        App.app.configureSessionWithPreSelectedInputDevice(session)
         return PimpGame(session, difficultyLevel, 0, howManyLevelsToPlay, pathPrefix, this)
     }
 
-    override fun createWithDefaultSettings(session: GameSession): Game {
+    override fun createWithSimpleSettings(session: GameSession): Game {
+        return PimpGame(session, 1, 0, -1, pathPrefix, this)
+    }
+
+    override fun createWithTournamentSettings(session: GameSession): Game {
         return PimpGame(session, difficultyLevel, 0, 3, pathPrefix, this)
     }
 }
