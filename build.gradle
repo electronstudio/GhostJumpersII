@@ -94,7 +94,7 @@ project(":core") {
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         //compile name: 'retrowar-common', version: '+'
-        compile "uk.co.electronstudio.retrowar:retrowar-common:0.17.0"
+        compile "uk.co.electronstudio.retrowar:retrowar-common:0.19.2"
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
         compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
         compile "net.onedaybeard.artemis:artemis-odb:2.1.0"
@@ -103,7 +103,7 @@ project(":core") {
 
     jar {
         manifest {
-            attributes("RetroWar-Version": "0.17",
+            attributes("RetroWar-Version": "0.19.2",
                     "Factory-Class": "uk.co.electronstudio.ghostjumpers.PimpGameFactory"
             )
         }
