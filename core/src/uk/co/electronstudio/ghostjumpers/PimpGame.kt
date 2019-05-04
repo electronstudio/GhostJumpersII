@@ -271,6 +271,8 @@ pathPrefix: String, val factory: PimpGameFactory) :
         }
         if (howManyLevelsToPlay == 1) {
             session.nextGame = null
+            val overallWinner = session.findWinners().first()
+            overallWinner?.incMetaScore()
         } else if (level == factory.maps.lastIndex) {
             session.nextGame = PimpGame(session, difficulty + 1, 0, howManyLevelsToPlay - 1, pathPrefix, factory)
 

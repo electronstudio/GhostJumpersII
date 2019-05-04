@@ -4,6 +4,7 @@ package uk.co.electronstudio.ghostjumpers
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.math.MathUtils
 import uk.co.electronstudio.retrowar.AbstractGameFactory
 import uk.co.electronstudio.retrowar.App
 import uk.co.electronstudio.retrowar.Game
@@ -57,6 +58,6 @@ class PimpGameFactory(pathPrefix: String) : AbstractGameFactory("Ghost Jumpers",
     }
 
     override fun createWithTournamentSettings(session: GameSession): Game {
-        return PimpGame(session, difficultyLevel, 0, 3, pathPrefix, this)
+        return PimpGame(session, MathUtils.random(2,6), MathUtils.random(maps.size-1), 1, pathPrefix, this)
     }
 }
