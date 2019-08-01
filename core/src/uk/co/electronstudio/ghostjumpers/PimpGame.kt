@@ -43,9 +43,11 @@ pathPrefix: String, val factory: PimpGameFactory) :
     val bonusSound = Gdx.audio.newSound(Gdx.files.internal(pathPrefix+"bonus_jade.wav"))
     val spawnSound = Gdx.audio.newSound(Gdx.files.internal(pathPrefix+"hit_jade.wav"))
     val controlsImageLayer = Texture(pathPrefix+"controls.png")
-    val music = CrossPlatformMusic.create(desktopFile = pathPrefix+"justin1.ogg", androidFile =
+    val music = CrossPlatformMusic.create(desktopFile = pathPrefix+"GhostJumpersSpooooky.ogg", androidFile =
     pathPrefix+"JustinLong.ogg", iOSFile = pathPrefix+"justin1.wav")
 
+    val music2 = CrossPlatformMusic.create(desktopFile = pathPrefix+"JustinLong.ogg", androidFile =
+    pathPrefix+"JustinLong.ogg", iOSFile = pathPrefix+"justin1.wav")
 
     val textures = spriteSheet.split(16, 16)
     val redFlash = Animation<Color>(0.1f, Color.BLACK, Color.RED)
@@ -142,13 +144,21 @@ pathPrefix: String, val factory: PimpGameFactory) :
         }
     }
 
-    val fpsLimiter = FPSLimiter(40f)
+
+
+    var timeRunnningOut = false
 
     private fun doGameLogic(delta: Float) {
-        // fpsLimiter.delay() //FIXME does not work
 
 
-        val pitch = if (timeleft() > 30) 1.0f else 2.0f - timeleft() / 30f
+
+//        if(timeleft()<=30 && !timeRunnningOut){
+//            music.stop()
+//            timeRunnningOut = true
+//            music2.play()
+//        }
+
+        val pitch = if (timeleft() > 30) 1f else if (timeleft() >20) 1.25f else if (timeleft()>10) 1.5f else 1.75f//- timeleft() / 30f
         music.setPitch(pitch)
 
         allSprites.forEach {
