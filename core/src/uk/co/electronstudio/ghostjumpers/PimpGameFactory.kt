@@ -5,10 +5,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.math.MathUtils
-import uk.co.electronstudio.retrowar.AbstractGameFactory
-import uk.co.electronstudio.retrowar.App
-import uk.co.electronstudio.retrowar.Game
-import uk.co.electronstudio.retrowar.isMobile
+import uk.co.electronstudio.retrowar.*
 import uk.co.electronstudio.retrowar.menu.MultiChoiceMenuItem
 import uk.co.electronstudio.retrowar.screens.GameSession
 
@@ -18,6 +15,12 @@ import uk.co.electronstudio.retrowar.screens.GameSession
 class PimpGameFactory(pathPrefix: String) : AbstractGameFactory("Ghost Jumpers", null, pathPrefix) {
 
     override val image by lazy { Texture(Gdx.files.internal("$pathPrefix/pimpenemy.png")) }
+
+    val music = CrossPlatformMusic.create(desktopFile = pathPrefix+"GhostJumpersSpooooky.ogg", androidFile =
+    pathPrefix+"hostJumpersSpooooky.ogg", iOSFile = pathPrefix+"GhostJumpersSpooooky.mp3")
+
+    val music2 = CrossPlatformMusic.create(desktopFile = pathPrefix+"JustinLong.ogg", androidFile =
+    pathPrefix+"JustinLong.ogg", iOSFile = pathPrefix+"justin1.wav")
 
 
     val font = BitmapFont(Gdx.files.internal(pathPrefix+"english.fnt")) // for drawing text

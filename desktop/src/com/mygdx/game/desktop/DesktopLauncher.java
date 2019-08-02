@@ -46,6 +46,11 @@ public class DesktopLauncher {
 		public void setBackgroundFPS(int backgroundFPS) {
 			config.backgroundFPS = backgroundFPS;
 		}
+
+		@Override
+		public boolean FPSsupported() {
+			return true;
+		}
 	}
 
 }

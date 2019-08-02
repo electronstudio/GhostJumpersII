@@ -32,6 +32,7 @@ pathPrefix: String, val factory: PimpGameFactory) :
     override val MAX_FPS = 250f
     override val MIN_FPS = 20f
 
+    val music = if(friendlyLevelNumber()%2 == 0) factory.music2 else factory.music
 
     val background = TmxMapLoader().load(factory.maps[level])!!
 
@@ -43,11 +44,7 @@ pathPrefix: String, val factory: PimpGameFactory) :
     val bonusSound = Gdx.audio.newSound(Gdx.files.internal(pathPrefix+"bonus_jade.wav"))
     val spawnSound = Gdx.audio.newSound(Gdx.files.internal(pathPrefix+"hit_jade.wav"))
     val controlsImageLayer = Texture(pathPrefix+"controls.png")
-    val music = CrossPlatformMusic.create(desktopFile = pathPrefix+"GhostJumpersSpooooky.ogg", androidFile =
-    pathPrefix+"JustinLong.ogg", iOSFile = pathPrefix+"justin1.wav")
 
-    val music2 = CrossPlatformMusic.create(desktopFile = pathPrefix+"JustinLong.ogg", androidFile =
-    pathPrefix+"JustinLong.ogg", iOSFile = pathPrefix+"justin1.wav")
 
     val textures = spriteSheet.split(16, 16)
     val redFlash = Animation<Color>(0.1f, Color.BLACK, Color.RED)
@@ -146,17 +143,8 @@ pathPrefix: String, val factory: PimpGameFactory) :
 
 
 
-    var timeRunnningOut = false
 
     private fun doGameLogic(delta: Float) {
-
-
-
-//        if(timeleft()<=30 && !timeRunnningOut){
-//            music.stop()
-//            timeRunnningOut = true
-//            music2.play()
-//        }
 
         val pitch = if (timeleft() > 30) 1f else if (timeleft() >20) 1.25f else if (timeleft()>10) 1.5f else 1.75f//- timeleft() / 30f
         music.setPitch(pitch)
@@ -311,6 +299,6 @@ pathPrefix: String, val factory: PimpGameFactory) :
         stunSound.dispose()
         bonusSound.dispose()
         spawnSound.dispose()
-        music.dispose()
+        //music.dispose()
     }
 }
