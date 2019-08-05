@@ -48,7 +48,7 @@ project(":desktop") {
 
 
     dependencies {
-        implementation project(":core")
+        compile project(":core")
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "uk.co.electronstudio.sdl2gdx:sdl2gdx:1.0.3-jimbly"
@@ -64,7 +64,7 @@ project(":android") {
     configurations { natives }
 
     dependencies {
-        implementation project(":core")
+        compile project(":core")
         //compile fileTree('../../retrogame/core/build/libs')
         api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-controllers-android:$gdxVersion"
@@ -98,10 +98,10 @@ project(":core") {
 
 
     dependencies {
-        implementation 'org.slf4j:slf4j-simple:1.7.21'
-        api "com.badlogicgames.gdx:gdx:$gdxVersion"
-        api "uk.co.electronstudio.retrowar:retrowar-common:1.3.0"
-        implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        compile 'org.slf4j:slf4j-simple:1.7.21'
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile "uk.co.electronstudio.retrowar:retrowar-common:1.3.1"
+        compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
 
     }

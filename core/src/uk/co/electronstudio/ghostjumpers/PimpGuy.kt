@@ -130,12 +130,12 @@ class PimpGuy(
 
     private fun doRunning() {
         xVel = 0f
-        if (input.leftStick.x < -0.3f || input.rightStick.x < -0.3f) {
+        if (input.leftStick.x < -0.3f) {
             xVel = -50f
             animation = runningAnim
             flip = (xVel < 0f)
         }
-        if (input.leftStick.x > 0.3f || input.rightStick.x > 0.3f) {
+        if (input.leftStick.x > 0.3f) {
             xVel = 50f
             animation = runningAnim
             flip = (xVel < 0f)
@@ -157,14 +157,14 @@ class PimpGuy(
     }
 
     private fun doClimbingUp(delta: Float) {
-        if (input.leftStick.y < -0.3f || input.rightStick.y < -0.3f) {
+        if (input.leftStick.y < -0.3f) {
             y = y + 60f * delta
             animation = climbAnim
         }
     }
 
     private fun doClimbingDown(delta: Float) {
-        if (input.leftStick.y > 0.3f || input.rightStick.y > 0.3f) {
+        if (input.leftStick.y > 0.3f) {
             y = y - 60f * delta
             animation = climbAnim
         }

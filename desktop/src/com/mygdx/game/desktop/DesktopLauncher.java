@@ -13,8 +13,8 @@ import uk.co.electronstudio.retrowar.utils.SimpleLogger;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		DesktopCallback callback = new DesktopCallback();
-		App app = new SimpleApp(callback, "Ghost Jumpers", PimpGameFactory.class, new SimpleLogger(), null, false,
-				false);
+		App app = new SimpleApp(callback, "Ghost Jumpers", PimpGameFactory.class, new SimpleLogger(), null, true,
+				true);
 		new LwjglApplication(app, callback.config);
 	}
 
