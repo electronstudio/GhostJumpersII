@@ -1,13 +1,11 @@
 # Ghost Jumpers
 Demo RetroWar minigame
 
-Copyright 2017 Electron Studio
-All rights reserved
+Copyright 2017 - 2019 Electron Studio
+Some rights reserved
 
-Originally an example of how to make a minigame that could run standalone and also
-be loaded into RetroWar as a plugin.  Still useful for that purpose but it's now
-being expanded a little to make a Donkey Kong clone.  May be merged into main
-source at some point, and then this repo will remain as an example.
+An example of how to make a minigame that could run standalone and also
+be loaded into RetroWar as a plugin. Now complete, future development will be in GhostJumpersII.
 
 Once the game has started each player must hit fire on their controller or space on the keyboard to join the game.  To skip levels hit 'N'.
 
@@ -15,19 +13,13 @@ Graphics are based on Simples Pimples art set by [Surt](https://opengameart.org/
 
 SoundFX are by [JDWasabi](https://wasabi-playground.com/about)
 
-Music by No One Can Kill Me.
+Music by [Dave Allen](https://dave-allen-music.com/).
 
 TODO:
 
-- [x] <strike>soundfx</strike>
-- [x] <strike>option for smooth motion</strike>
-- [x] <strike>make level 2 blue</strike>
-- [x] BETA
 - [ ] enemies that can climb down
-- [x] level 3
-- [x] code tidy
-- [x] winner
-- [x] scores
+- [ ] smart enemies
+- [ ] points for jumping
+- [ ] coins
+- [ ] score table
 - [ ] scrolling
-- [x] <strike>either: allow smooth motion and bilinear filtering</strike>
-  - [x] OR: disable option in menu when necessary
