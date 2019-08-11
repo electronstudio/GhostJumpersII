@@ -51,7 +51,7 @@ abstract class RetroSprite(textureRegion: TextureRegion) : Sprite
         }
     }
 
-    fun collisionTest(others: ArrayList<RetroSprite>): Boolean {
+    fun collisionTest(others: ArrayList<RetroSprite>, colliding: ArrayList<RetroSprite> = ArrayList()): Boolean {
         val rect1 = Rectangle(
                 x + spriteCollisionShape.x, y + spriteCollisionShape.y,
                 spriteCollisionShape.width, spriteCollisionShape.height
@@ -63,10 +63,16 @@ abstract class RetroSprite(textureRegion: TextureRegion) : Sprite
             rect2.width = it.spriteCollisionShape.width
             rect2.height = it.spriteCollisionShape.height
             if (rect1.overlaps(rect2)) {
-                return true
+                colliding.add(it)
             }
         }
-        return false
+        return colliding.isNotEmpty()
+    }
+
+    fun getCollisions(others: ArrayList<RetroSprite>): List<RetroSprite>{
+        val colliding = ArrayList<RetroSprite>()
+        collisionTest(others, colliding)
+        return colliding
     }
 
     fun collisionTestRect(others: List<Rectangle>): Boolean {

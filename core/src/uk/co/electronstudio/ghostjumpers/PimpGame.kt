@@ -10,7 +10,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.MapObject
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Align
 import uk.co.electronstudio.retrowar.App
@@ -53,7 +55,8 @@ pathPrefix: String, val factory: PimpGameFactory) :
 
     val spawners = ArrayList<GhostFactory>()
     val allSprites = ArrayList<RetroSprite>()
-    val enemies = ArrayList<RetroSprite>()
+//    val enemies = ArrayList<RetroSprite>()
+//    val coins = ArrayList<RetroSprite>()
     val exits = ArrayList<Rectangle>()
     val entry = Rectangle()
     val scoreDisplay = players.sumBy { it.score } //not dynamic, taken from last level
@@ -64,6 +67,8 @@ pathPrefix: String, val factory: PimpGameFactory) :
     var winner: Player? = null
     var endOfLevelMessage = ""
 
+    val coinChance = 0.3f
+
     init {
         font.data.markupEnabled = true
         for (layer in background.layers) {
@@ -71,7 +76,19 @@ pathPrefix: String, val factory: PimpGameFactory) :
                 createObjectFromMap(obj)
             }
         }
+        val tiles = background.layers.first() as TiledMapTileLayer
+        for(x in 0..tiles.width){
+            for(y in 0..tiles.height){
+                if(cellIsEmpty(x, y) && MathUtils.random() < coinChance){
+                    createCoin(x*16f, y*16f)
+                }
+            }
+        }
+
     }
+
+    private fun cellIsEmpty(x: Int, y: Int) =
+            !background.layers.filterIndexed { index, mapLayer -> index != 0 }.any { it is TiledMapTileLayer && it.getCell(x, y) != null }
 
     private fun createObjectFromMap(obj: MapObject) {
         val type = obj.properties["type"]
@@ -81,6 +98,7 @@ pathPrefix: String, val factory: PimpGameFactory) :
                 "entry" -> createEntry(obj)
                 "spawner" -> createSpawner(obj)
                 "goblin" -> createGoblin(obj)
+                "coin" -> createCoin(obj)
             }
         }
     }
@@ -94,9 +112,21 @@ pathPrefix: String, val factory: PimpGameFactory) :
                 background = background,
                 leftWalk = obj.properties["leftWalk"] as Float,
                 rightWalk = obj.properties["rightWalk"] as Float)
-        enemies.add(goblin)
+    //    enemies.add(goblin)
         allSprites.add(goblin)
     }
+
+    private fun createCoin(obj: RectangleMapObject) {
+        createCoin(obj.rectangle.x, obj.rectangle.y)
+    }
+
+    private fun createCoin(x: Float, y: Float) {
+        val coin = Coin(x = x,
+                y = y,
+                animation = Animation(0.5f, textures[47][27], textures[47][29]))
+        allSprites.add(coin)
+    }
+
 
     private fun createSpawner(obj: RectangleMapObject) {
         spawners.add(

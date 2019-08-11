@@ -20,7 +20,7 @@ class GhostFactory(val x: Float, val y: Float, val speed: Float, val mintime: Fl
         if (enemyTimer < 0f) {
             val g = spawn()
             pimpGame.allSprites.add(g)
-            pimpGame.enemies.add(g)
+           // pimpGame.enemies.add(g)
             enemyTimer = MathUtils.random(mintime, maxTime)
             playSound(pimpGame.spawnSound)
         }

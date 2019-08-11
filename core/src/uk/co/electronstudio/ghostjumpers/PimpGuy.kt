@@ -2,7 +2,10 @@ package uk.co.electronstudio.ghostjumpers
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Animation
+import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Rectangle
 import com.sun.media.sound.EmergencySoundbank.toFloat
@@ -40,8 +43,14 @@ class PimpGuy(
 
     fun isStunned() = stunCounter > 0f
 
+    var label = player.name
+    var labelTimer = 5f
+    var coins = 0
+    var ghosts = 0
+
     /* called every frame */
     override fun update(delta: Float) {
+        labelTimer -= delta
         doAnimation(delta)
         animation = defaultAnim
 
@@ -54,6 +63,15 @@ class PimpGuy(
         doSimplePhysics(delta)
         checkOutOfBounds()
         checkPushes()
+    }
+
+    override fun draw(batch: Batch?) {
+        super.draw(batch)
+        if(labelTimer>0f) {
+            pimpGame.font.color = player.color2
+            val layout = GlyphLayout(pimpGame.font, label)
+            pimpGame.font.draw(batch, layout, x-layout.width/2+8f, y+24f)
+        }
     }
 
     private fun checkPushes() {
@@ -115,9 +133,21 @@ class PimpGuy(
     }
 
     private fun checkEnemyColisions() {
-        if (collisionTest(pimpGame.enemies)) {
-            stunCounter = 64f
-            playSound(pimpGame.stunSound)
+        val colliding = getCollisions(pimpGame.allSprites)
+        colliding.forEach{
+            when(it){
+                is Ghost, is Goblin -> {
+                    stunCounter = 64f
+                    playSound(pimpGame.stunSound)
+                }
+                is Coin -> {
+                    it.dead = true
+                    coins++
+                    label="$coins"
+                    labelTimer=2f
+                }
+            }
+
         }
     }
 
