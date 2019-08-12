@@ -33,7 +33,8 @@ class PimpGuy(
     private val jumpAnimation = Animation(0.1f, textures[spriteSheetOffsetY][spriteSheetOffsetX + 1])
 
     private var stunCounter = 0f
-    private var fallTimer = 100f
+    private var fallTimer = 0f
+    private var jumpTimer = 0f
 
     override val collisionRect = Rectangle(4f, 4f, 8f, 8f)
     val collisionRectFeet = Rectangle(4f, -2f, 8f, 4f)
@@ -50,6 +51,7 @@ class PimpGuy(
 
     /* called every frame */
     override fun update(delta: Float) {
+        jumpTimer += delta
         labelTimer -= delta
         doAnimation(delta)
         animation = defaultAnim
@@ -120,14 +122,14 @@ class PimpGuy(
 
     private fun checkBackgroundColisions(delta: Float) {
         collisionTest(collisionRectFeet, background)
-        if (weAreOn("ladder")) {
+        if (weAreOn("ladder") && jumpTimer > 0.3f) {
             xVel = 0f
             yVel = 0f
             doClimbingDown(delta)
             animation = climbAnim
             doLadderJump()
         }
-        if (weAreOn("platform")) {
+        if (weAreOn("platform") && jumpTimer > 0.3f) {
             yVel = 0f
             doRunning()
             doJumping()
@@ -169,7 +171,6 @@ class PimpGuy(
                 when (it) {
                     is Ghost, is Goblin -> {
                         if (!spritesJumpedOver.contains(it)) {
-                            println("jumped $it")
                             ghosts++
                             label = "${coins+ghosts}"
                             labelTimer = 2f
@@ -178,7 +179,6 @@ class PimpGuy(
                         }
                     }
                     is Coin -> {
-                        println("jump coin")
                     }
                 }
             }
@@ -210,29 +210,27 @@ class PimpGuy(
     }
 
     private fun doJumping() {
-        if (input.fire) {
-            yVel = 100f
-            animation = jumpAnimation
-            playSound(pimpGame.jumpSound)
-            fallTimer = 100f
+        if (input.fire && jumpTimer > 0.5f) {
+            jump()
         }
+    }
+
+    private fun jump() {
+        yVel = 100f
+        animation = jumpAnimation
+        playSound(pimpGame.jumpSound)
+        fallTimer = 100f
+        jumpTimer = 0f
+        flip = (xVel < 0f)
     }
 
     private fun doLadderJump(){
         if (input.fire && input.leftStick.x < -0.3f) {
             xVel = -50f
-            yVel = 100f
-            animation = jumpAnimation
-            playSound(pimpGame.jumpSound)
-            fallTimer = 100f
-            flip = (xVel < 0f)
+            jump()
         }else  if (input.fire && input.leftStick.x > 0.3f) {
             xVel = 50f
-            yVel = 100f
-            animation = jumpAnimation
-            playSound(pimpGame.jumpSound)
-            fallTimer = 100f
-            flip = (xVel < 0f)
+            jump()
         }
     }
 
