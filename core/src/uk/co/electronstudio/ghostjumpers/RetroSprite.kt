@@ -1,6 +1,5 @@
 package uk.co.electronstudio.ghostjumpers
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
@@ -20,7 +19,7 @@ abstract class RetroSprite(textureRegion: TextureRegion) : Sprite
         animation = a
     }
 
-    abstract val spriteCollisionShape: Rectangle
+    abstract val collisionRect: Rectangle
 
     var dead = false
 
@@ -51,17 +50,17 @@ abstract class RetroSprite(textureRegion: TextureRegion) : Sprite
         }
     }
 
-    fun collisionTest(others: ArrayList<RetroSprite>, colliding: ArrayList<RetroSprite> = ArrayList()): Boolean {
+    fun collisionTest(others: ArrayList<RetroSprite>, colliding: ArrayList<RetroSprite> = ArrayList(), rectangle: Rectangle = collisionRect): Boolean {
         val rect1 = Rectangle(
-                x + spriteCollisionShape.x, y + spriteCollisionShape.y,
-                spriteCollisionShape.width, spriteCollisionShape.height
+                x + rectangle.x, y + rectangle.y,
+                rectangle.width, rectangle.height
         )
         val rect2 = Rectangle()
         others.forEach {
-            rect2.x = it.x + it.spriteCollisionShape.x
-            rect2.y = it.y + it.spriteCollisionShape.y
-            rect2.width = it.spriteCollisionShape.width
-            rect2.height = it.spriteCollisionShape.height
+            rect2.x = it.x + it.collisionRect.x
+            rect2.y = it.y + it.collisionRect.y
+            rect2.width = it.collisionRect.width
+            rect2.height = it.collisionRect.height
             if (rect1.overlaps(rect2)) {
                 colliding.add(it)
             }
@@ -69,16 +68,17 @@ abstract class RetroSprite(textureRegion: TextureRegion) : Sprite
         return colliding.isNotEmpty()
     }
 
-    fun getCollisions(others: ArrayList<RetroSprite>): List<RetroSprite>{
+    fun getCollisions(others: ArrayList<RetroSprite>,
+                      rectangle: Rectangle): List<RetroSprite>{
         val colliding = ArrayList<RetroSprite>()
-        collisionTest(others, colliding)
+        collisionTest(others, colliding, rectangle)
         return colliding
     }
 
     fun collisionTestRect(others: List<Rectangle>): Boolean {
         val rect1 = Rectangle(
-                x + spriteCollisionShape.x, y + spriteCollisionShape.y,
-                spriteCollisionShape.width, spriteCollisionShape.height)
+                x + collisionRect.x, y + collisionRect.y,
+                collisionRect.width, collisionRect.height)
         others.forEach {
             if (rect1.overlaps(it)) {
                 return true

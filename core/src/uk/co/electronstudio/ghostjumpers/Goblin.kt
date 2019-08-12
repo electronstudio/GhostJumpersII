@@ -16,7 +16,7 @@ class Goblin(
 ) :
         RetroSprite(animation) {
 
-    override val spriteCollisionShape = Rectangle(4f, 0f, 8f, 8f)
+    override val collisionRect = Rectangle(4f, 0f, 8f, 8f)
 
     val leftLimit = initX - leftWalk
     val rightLimit = initX + rightWalk

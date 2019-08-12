@@ -14,7 +14,7 @@ class Ghost(
             ) :
         RetroSprite(textureRegion) {
 
-    override var spriteCollisionShape = Rectangle(4f, 0f, 8f, 8f)
+    override var collisionRect = Rectangle(4f, 0f, 8f, 8f)
 
     init {
         x = initX
@@ -24,7 +24,7 @@ class Ghost(
     }
 
     override fun update(delta: Float) {
-        collisionTest(spriteCollisionShape, background)
+        collisionTest(collisionRect, background)
         checkBackgroundColisions()
         doSimplePhysics(delta)
         checkBounds()

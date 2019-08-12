@@ -13,7 +13,7 @@ class Coin(
 ) :
         RetroSprite(animation) {
 
-    override var spriteCollisionShape = Rectangle(4f, 0f, 8f, 8f)
+    override var collisionRect = Rectangle(4f, 0f, 8f, 8f)
 
     init {
         this.x = x

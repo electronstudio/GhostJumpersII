@@ -1,17 +1,13 @@
 package uk.co.electronstudio.ghostjumpers
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Rectangle
-import com.sun.media.sound.EmergencySoundbank.toFloat
 import uk.co.electronstudio.retrowar.Player
 import uk.co.electronstudio.retrowar.Prefs
-import uk.co.electronstudio.retrowar.playAtOurVolume
 
 
 /*
@@ -39,8 +35,9 @@ class PimpGuy(
     private var stunCounter = 0f
     private var fallTimer = 100f
 
-    override val spriteCollisionShape = Rectangle(4f, 4f, 8f, 8f)
-    val collisionShapeFeet = Rectangle(4f, -2f, 8f, 4f)
+    override val collisionRect = Rectangle(4f, 4f, 8f, 8f)
+    val collisionRectFeet = Rectangle(4f, -2f, 8f, 4f)
+    val collisionRectShadow = Rectangle(4f, -24f, 8f, 24f)
 
     fun isStunned() = stunCounter > 0f
 
@@ -48,6 +45,8 @@ class PimpGuy(
     var labelTimer = 5f
     var coins = 0
     var ghosts = 0
+
+    val spritesJumpedOver = ArrayList<RetroSprite>()
 
     /* called every frame */
     override fun update(delta: Float) {
@@ -106,6 +105,7 @@ class PimpGuy(
     private fun doWeAreNotStunned(delta: Float) {
         checkBackgroundColisions(delta)
         checkEnemyColisions()
+        checkShadowColisions()
         checkExitColisions()
         checkScreenEdgeColisions()
     }
@@ -119,12 +119,13 @@ class PimpGuy(
     }
 
     private fun checkBackgroundColisions(delta: Float) {
-        collisionTest(collisionShapeFeet, background)
+        collisionTest(collisionRectFeet, background)
         if (weAreOn("ladder")) {
             xVel = 0f
             yVel = 0f
             doClimbingDown(delta)
             animation = climbAnim
+            doLadderJump()
         }
         if (weAreOn("platform")) {
             yVel = 0f
@@ -143,7 +144,7 @@ class PimpGuy(
     }
 
     private fun checkEnemyColisions() {
-        val colliding = getCollisions(pimpGame.allSprites)
+        val colliding = getCollisions(pimpGame.allSprites, collisionRect)
         colliding.forEach{
             when(it){
                 is Ghost, is Goblin -> {
@@ -153,19 +154,44 @@ class PimpGuy(
                 is Coin -> {
                     it.dead = true
                     coins++
-                    label="$coins"
+                    label = "${coins+ghosts}"
                     labelTimer=2f
                     playSound(pimpGame.collectSound)
                 }
             }
+        }
+    }
 
+    private fun checkShadowColisions() {
+        if(fallTimer>0f) {
+            val colliding = getCollisions(pimpGame.allSprites, collisionRectShadow)
+            colliding.forEach {
+                when (it) {
+                    is Ghost, is Goblin -> {
+                        if (!spritesJumpedOver.contains(it)) {
+                            println("jumped $it")
+                            ghosts++
+                            label = "${coins+ghosts}"
+                            labelTimer = 2f
+                            playSound(pimpGame.bonusSound)
+                            spritesJumpedOver.add(it)
+                        }
+                    }
+                    is Coin -> {
+                        println("jump coin")
+                    }
+                }
+            }
         }
     }
 
     private fun checkExitColisions() {
         if (collisionTestRect(pimpGame.exits)) {
             playSound(pimpGame.bonusSound)
-            pimpGame.levelComplete(this)
+            dead=true
+            if(pimpGame.allSprites.none{it is PimpGuy && !it.dead}) {
+                pimpGame.levelComplete(this)
+            }
         }
     }
 
@@ -189,6 +215,24 @@ class PimpGuy(
             animation = jumpAnimation
             playSound(pimpGame.jumpSound)
             fallTimer = 100f
+        }
+    }
+
+    private fun doLadderJump(){
+        if (input.fire && input.leftStick.x < -0.3f) {
+            xVel = -50f
+            yVel = 100f
+            animation = jumpAnimation
+            playSound(pimpGame.jumpSound)
+            fallTimer = 100f
+            flip = (xVel < 0f)
+        }else  if (input.fire && input.leftStick.x > 0.3f) {
+            xVel = 50f
+            yVel = 100f
+            animation = jumpAnimation
+            playSound(pimpGame.jumpSound)
+            fallTimer = 100f
+            flip = (xVel < 0f)
         }
     }
 

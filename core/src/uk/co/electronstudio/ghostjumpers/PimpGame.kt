@@ -190,7 +190,11 @@ pathPrefix: String, val factory: PimpGameFactory) :
         spawners.forEach { it.update(delta) }
 
         if (timeleft() <= 0) {
-            timeOver()
+            if(allSprites.any{it is PimpGuy && it.dead}){
+                levelComplete(null)
+            }else {
+                timeOver()
+            }
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.P)) {
