@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.MapObject
 import com.badlogic.gdx.maps.objects.RectangleMapObject
@@ -16,7 +15,6 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Align
 import uk.co.electronstudio.retrowar.App
-import uk.co.electronstudio.retrowar.CrossPlatformMusic
 import uk.co.electronstudio.retrowar.Player
 import uk.co.electronstudio.retrowar.Prefs
 import uk.co.electronstudio.retrowar.SimpleGame
@@ -45,6 +43,7 @@ pathPrefix: String, val factory: PimpGameFactory) :
     val stunSound = Gdx.audio.newSound(Gdx.files.internal(pathPrefix+"fall_jade.wav"))
     val bonusSound = Gdx.audio.newSound(Gdx.files.internal(pathPrefix+"bonus_jade.wav"))
     val spawnSound = Gdx.audio.newSound(Gdx.files.internal(pathPrefix+"hit_jade.wav"))
+    val collectSound = Gdx.audio.newSound(Gdx.files.internal(pathPrefix+"collect_jade.wav"))
     val controlsImageLayer = Texture(pathPrefix+"controls.png")
 
 
@@ -212,14 +211,39 @@ pathPrefix: String, val factory: PimpGameFactory) :
 
     }
 
-    private fun drawGame(batch: Batch) {
+    var yScroll = 0f
 
+    private fun drawGame(batch: Batch) {
+        calculateScroll()
+        scrollBatch(batch, -yScroll)
         batch.draw(bgTexture, 0f, 0f)
         drawSprites(batch)
+        scrollBatch(batch, yScroll)
+
         drawText(batch)
         if (isMobile && noFingersTouchingScreen()) {
             batch.draw(controlsImageLayer, 0f, 0f)
         }
+    }
+
+    private fun calculateScroll() {
+        val pimps = allSprites.filter { it is PimpGuy }
+        if (pimps.isNotEmpty()) {
+            val heighestPimp = pimps.sortedByDescending { it.y }.first().y
+            if (heighestPimp > yScroll + 120f) {
+                yScroll = heighestPimp - 120f
+            }
+            if (heighestPimp < yScroll + 100f) {
+                yScroll = heighestPimp - 100f
+            }
+            yScroll = MathUtils.clamp(yScroll, 0f, bgTexture.regionHeight.toFloat() - height)
+        }
+    }
+
+    private fun scrollBatch(batch: Batch, y: Float) {
+        batch.end()
+        batch.projectionMatrix.translate(0f, y, 0f)
+        batch.begin()
     }
 
     private fun drawText(batch: Batch) {

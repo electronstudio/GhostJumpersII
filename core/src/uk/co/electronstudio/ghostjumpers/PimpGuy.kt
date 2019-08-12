@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Rectangle
 import com.sun.media.sound.EmergencySoundbank.toFloat
 import uk.co.electronstudio.retrowar.Player
 import uk.co.electronstudio.retrowar.Prefs
+import uk.co.electronstudio.retrowar.playAtOurVolume
 
 
 /*
@@ -106,6 +107,15 @@ class PimpGuy(
         checkBackgroundColisions(delta)
         checkEnemyColisions()
         checkExitColisions()
+        checkScreenEdgeColisions()
+    }
+
+    private fun checkScreenEdgeColisions() {
+        if(y<pimpGame.yScroll){
+           //stunCounter = 10f
+            playSound(pimpGame.stunSound)
+            yVel = 100f
+        }
     }
 
     private fun checkBackgroundColisions(delta: Float) {
@@ -145,6 +155,7 @@ class PimpGuy(
                     coins++
                     label="$coins"
                     labelTimer=2f
+                    playSound(pimpGame.collectSound)
                 }
             }
 
