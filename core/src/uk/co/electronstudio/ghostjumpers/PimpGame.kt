@@ -23,6 +23,8 @@ import uk.co.electronstudio.retrowar.renderTileMapToTexture
 import uk.co.electronstudio.retrowar.screens.GameSession
 import java.util.ArrayList
 
+
+
 /* The God class */
 class PimpGame(session: GameSession, val difficulty: Int, val level: Int, val howManyLevelsToPlay: Int, val 
 pathPrefix: String, val factory: PimpGameFactory) :
@@ -67,6 +69,8 @@ pathPrefix: String, val factory: PimpGameFactory) :
     var endOfLevelMessage = ""
 
     val coinChance = 0.3f
+
+    val pimps = ArrayList<PimpGuy>()
 
     init {
         font.data.markupEnabled = true
@@ -188,20 +192,18 @@ pathPrefix: String, val factory: PimpGameFactory) :
         } // JDK 8 / Android 7: allSprites.removeIf { it.dead }
 
         spawners.forEach { it.update(delta) }
-
-        if (timeleft() <= 0) {
-            if(allSprites.any{it is PimpGuy && it.dead}){
-                levelComplete(null)
-            }else {
-                timeOver()
-            }
+        if(allSprites.none{it is PimpGuy}) {
+            levelComplete()
+        }
+        else if (timeleft() <= 0) {
+            timeOver()
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.P)) {
             println(App.app.testSandbox()) // should crash if sandbox is working
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
-            levelComplete(null)
+            levelComplete()
         }
     }
 
@@ -276,12 +278,12 @@ pathPrefix: String, val factory: PimpGameFactory) :
         font.draw(batch, s, 0f, 240f, 320f, Align.center, false)
     }
 
-    fun scoreTable() = players.joinToString("") {
-        (if (it == winner) "[${multiFlash.getKeyFrame(timer, true)}]" else "") +
-                "\n\n${it.name} ${it.score}[]"
+    fun scoreTable() = "        JUMPS COINS TIME TOTAL\n"+pimps.joinToString("") {
+        (if (it.player == winner) "[${multiFlash.getKeyFrame(timer, true)}]" else "") +
+                "\n\n${it.player.name.padEnd(10)} ${it.ghosts.toString().padEnd(3)} ${it.coins.toString().padEnd(3)} ${it.completionTime.toString().padEnd(3)} ${it.player.score.toString().padEnd(3)}[]"
     }
 
-    private fun timeleft(): Int {
+    fun timeleft(): Int {
         return (timeLimit - timer).toInt()
     }
 
@@ -294,6 +296,7 @@ pathPrefix: String, val factory: PimpGameFactory) :
         pimp.y = entry.y
 
         allSprites.add(pimp)
+        pimps.add(pimp)
     }
 
 
@@ -319,11 +322,10 @@ pathPrefix: String, val factory: PimpGameFactory) :
     }
 
 
-    fun levelComplete(winner: PimpGuy?) {
-        this.winner = winner?.player
+    fun levelComplete() {
         music.stop()
-        if (winner != null) {
-            winner.player.score += timeleft() * difficulty
+       winner?.let {
+            it.score += timeleft() * difficulty
         }
         if (howManyLevelsToPlay == 1) {
             session.nextGame = null

@@ -21,6 +21,7 @@ class PimpGuy(
 ) :
         RetroSprite(pimpGame.textures[spriteSheetOffsetY][spriteSheetOffsetX]) {
 
+    var completionTime: Int = 0
     private val GRAVITY = 200f
     private val background: TiledMap = pimpGame.background
     private val textures = pimpGame.textures
@@ -189,8 +190,9 @@ class PimpGuy(
         if (collisionTestRect(pimpGame.exits)) {
             playSound(pimpGame.bonusSound)
             dead=true
-            if(pimpGame.allSprites.none{it is PimpGuy && !it.dead}) {
-                pimpGame.levelComplete(this)
+            if(pimpGame.winner==null) {
+                pimpGame.winner = this.player
+                completionTime=pimpGame.timeleft()
             }
         }
     }
