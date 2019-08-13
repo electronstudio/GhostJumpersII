@@ -57,7 +57,7 @@ class PimpGameFactory(pathPrefix: String) : AbstractGameFactory("Ghost Jumpers",
     }
 
     override fun createWithSimpleSettings(session: GameSession): Game {
-        return PimpGame(session, 1, 1, -1, pathPrefix, this)
+        return PimpGame(session, 1, 0, -1, pathPrefix, this)
     }
 
     override fun createWithTournamentSettings(session: GameSession): Game {

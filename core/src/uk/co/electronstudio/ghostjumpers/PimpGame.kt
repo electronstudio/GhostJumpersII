@@ -24,6 +24,13 @@ import uk.co.electronstudio.retrowar.screens.GameSession
 import java.util.ArrayList
 
 
+/**
+jump multipler
+coin multipler
+time multipler
+speed up + attack + invuln for last player
+all games to support disconnects/reconnects - session notify them directly?
+ */
 
 /* The God class */
 class PimpGame(session: GameSession, val difficulty: Int, val level: Int, val howManyLevelsToPlay: Int, val 
@@ -33,6 +40,9 @@ pathPrefix: String, val factory: PimpGameFactory) :
 
     override val MAX_FPS = 250f
     override val MIN_FPS = 20f
+
+    val CHAIN_LENGTH = 1f
+    val COIN_PROB = 0.2f
 
     val music = if(friendlyLevelNumber()%2 == 0) factory.music2 else factory.music
 
@@ -68,7 +78,6 @@ pathPrefix: String, val factory: PimpGameFactory) :
     var winner: Player? = null
     var endOfLevelMessage = ""
 
-    val coinChance = 0.3f
 
     val pimps = ArrayList<PimpGuy>()
 
@@ -82,7 +91,7 @@ pathPrefix: String, val factory: PimpGameFactory) :
         val tiles = background.layers.first() as TiledMapTileLayer
         for(x in 0..tiles.width){
             for(y in 0..tiles.height){
-                if(cellIsEmpty(x, y) && MathUtils.random() < coinChance){
+                if(cellIsEmpty(x, y) && MathUtils.random() < COIN_PROB){
                     createCoin(x*16f, y*16f)
                 }
             }
@@ -178,6 +187,10 @@ pathPrefix: String, val factory: PimpGameFactory) :
 
 
     private fun doGameLogic(delta: Float) {
+        if(winner != null){
+            timer += delta //doLogic has *already* increased timer, we are doing it *twice* to speed up time here
+        }
+
 
         val pitch = if (timeleft() > 30) 1f else if (timeleft() >20) 1.25f else if (timeleft()>10) 1.5f else 1.75f//- timeleft() / 30f
         music.setPitch(pitch)
@@ -197,7 +210,11 @@ pathPrefix: String, val factory: PimpGameFactory) :
         }
 
         else if (timeleft() <= 0) {
-            timeOver()
+            if(winner == null) {
+                timeOver()
+            }else{
+                levelComplete()
+            }
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.P)) {

@@ -47,6 +47,8 @@ class PimpGuy(
     var labelTimer = 5f
     var coins = 0
     var ghosts = 0
+    var chainLength = 0
+    var chainMultipler = 1
 
     val spritesJumpedOver = ArrayList<RetroSprite>()
 
@@ -152,6 +154,8 @@ class PimpGuy(
             when(it){
                 is Ghost, is Goblin -> {
                     stunCounter = 64f
+                    chainLength=0
+                    chainMultipler=1
                     playSound(pimpGame.stunSound)
                 }
                 is Coin -> {
@@ -172,8 +176,15 @@ class PimpGuy(
                 when (it) {
                     is Ghost, is Goblin -> {
                         if (!spritesJumpedOver.contains(it)) {
-                            ghosts++
-                            label = "${coins+ghosts}"
+                            ghosts += chainMultipler
+                            chainLength++
+                            if(chainLength>=pimpGame.CHAIN_LENGTH){
+                                chainLength=0
+                                chainMultipler++
+                                label = "CHAIN X"+chainMultipler
+                            }else {
+                                label = "${coins + ghosts}"
+                            }
                             labelTimer = 2f
                             playSound(pimpGame.bonusSound)
                             spritesJumpedOver.add(it)
