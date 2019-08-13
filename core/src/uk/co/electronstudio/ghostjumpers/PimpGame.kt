@@ -192,9 +192,10 @@ pathPrefix: String, val factory: PimpGameFactory) :
         } // JDK 8 / Android 7: allSprites.removeIf { it.dead }
 
         spawners.forEach { it.update(delta) }
-        if(allSprites.none{it is PimpGuy}) {
+        if(winner != null && allSprites.none{it is PimpGuy}) {
             levelComplete()
         }
+
         else if (timeleft() <= 0) {
             timeOver()
         }
@@ -300,6 +301,9 @@ pathPrefix: String, val factory: PimpGameFactory) :
     }
 
 
+    override fun playerLeft(player: Player) {
+        allSprites.filter { it is PimpGuy && it.player == player }.forEach{it.dead=true}
+    }
 
     private fun getCoordsOfSpriteInSheet(player: Int) = when (player) {
         0 -> Pair(26, 1)// different players get different texturegions within the spritesheet
